@@ -1,101 +1,59 @@
+import About from "@/components/About";
+import Contact from "@/components/Contact";
+import Hero from "@/components/Hero";
+import { Navbar } from "@/components/Navbar";
+import { Projects } from "@/components/Projects";
+import Services from "@/components/Services";
+import { TechStack } from "@/components/TechStack";
+import TransitionWrapper from "@/components/TransitionWrapper";
 import Image from "next/image";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="flex flex-col overflow-x-hidden">
+      <Navbar />
+      <Hero />
+      <About />
+      <Services />
+      <TransitionWrapper>
+        <div className="w-full py-[100px] px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto max-sm:hidden">
+          <div className="relative max-w-5xl flex flex-col mx-auto bg justify-center w-full max-h-36 overflow-hidden rounded-lg text-white">
+            <div className="h-full w-full bg-blue_bg absolute top-0 left-0 opacity-70 z-10 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" />
+            <div className="flex justify-between absolute top-0 left-0 z-20 w-full h-full gap-6 p-3 md:p-8 items-center">
+              <div className="">
+                <h1 className="font-semibold md:text-2xl text-[12px]">
+                  Ready to take your business to the next level?
+                </h1>
+                <p className="text-slate-100 text-[8px] md:text-sm text-left">
+                  Let's build something that turns your visitors into customers.
+                </p>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  className="flex border p-2 gap-2 justify-between items-center rounded-md text-[12px] md:text-lg"
+                >
+                  <p>Connect</p>
+                  <span>
+                    <FaArrowRightLong />
+                  </span>
+                </button>
+              </div>
+            </div>
             <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/image-11.jpeg"
+              alt="grow your business"
+              height={5}
+              width={5}
+              className="w-full"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </TransitionWrapper>
+      <TechStack />
+      <Projects />
+      <Contact />
     </div>
   );
 }
