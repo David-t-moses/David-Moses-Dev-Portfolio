@@ -5,7 +5,6 @@ import {
   IconAddressBook,
   IconHome,
   IconLayersLinked,
-  IconMessage,
   IconShoppingCartBolt,
   IconUser,
 } from "@tabler/icons-react";

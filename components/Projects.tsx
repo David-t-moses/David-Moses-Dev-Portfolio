@@ -26,6 +26,7 @@ export function Projects() {
                   link={item.link}
                 >
                   <ThreeDCard
+                    key={item.alt}
                     src={item.src}
                     alt={item.alt}
                     title={item.title}

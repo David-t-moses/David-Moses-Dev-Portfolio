@@ -28,7 +28,7 @@ export default function Hero() {
                 amazing but perform flawlessly.
               </p>
               <p className="text-white mt-7 text-[18px] font-bold">
-                Hi i'm David, a proficient Web Developer from Africa NG.
+                Hi i&apos;m David, a proficient Web Developer from Africa NG.
               </p>
             </div>
             <Image

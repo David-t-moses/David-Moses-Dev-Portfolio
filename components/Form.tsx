@@ -14,8 +14,6 @@ export function Form() {
     message: "",
   });
 
-  const [status, setStatus] = useState("");
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -24,7 +22,6 @@ export function Form() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Sending...");
 
     try {
       const response = await fetch("/api/contact", {
@@ -36,15 +33,13 @@ export function Form() {
       });
 
       if (response.ok) {
-        setStatus("Message sent successfully!");
         setFormData({ name: "", email: "", subject: "", message: "" });
         alert("Message sent successfully");
       } else {
-        setStatus("Failed to send message.");
         alert("Failed to send message");
       }
     } catch (error) {
-      setStatus("An error occurred. Please try again later.");
+      alert("An error occurred. Please try again later.");
     }
   };
 

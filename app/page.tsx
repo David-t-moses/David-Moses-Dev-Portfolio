@@ -26,7 +26,8 @@ export default function Home() {
                   Ready to take your business to the next level?
                 </h1>
                 <p className="text-slate-100 text-[8px] md:text-sm text-left">
-                  Let's build something that turns your visitors into customers.
+                  Let&apos;s build something that turns your visitors into
+                  customers.
                 </p>
               </div>
               <div>
