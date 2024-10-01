@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -7,29 +7,44 @@ import Button from "./ui/Button";
 import { FaPaperPlane } from "react-icons/fa6";
 
 export function Form() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const [status, setStatus] = useState("");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus("Sending...");
 
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, message }),
-    });
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    if (res.ok) {
-      setName("");
-      setEmail("");
-      setMessage("");
-      alert("Message sent successfully");
-    } else {
-      alert("Failed to send message");
+      if (response.ok) {
+        setStatus("Message sent successfully!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        alert("Message sent successfully");
+      } else {
+        setStatus("Failed to send message.");
+        alert("Failed to send message");
+      }
+    } catch (error) {
+      setStatus("An error occurred. Please try again later.");
     }
   };
 
@@ -41,33 +56,36 @@ export function Form() {
 
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="firstname">Name</Label>
+          <Label htmlFor="name">Name</Label>
           <Input
-            id="firstname"
+            id="name"
+            name="name"
             placeholder="David Moses"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleChange}
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
+            name="email"
             placeholder="davidtmoses5@gmail.com"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="subject">Subject</Label>
           <Input
             id="subject"
+            name="subject"
             placeholder="I need a website.."
             type="text"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
+            value={formData.subject}
+            onChange={handleChange}
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
@@ -82,8 +100,8 @@ export function Form() {
            disabled:cursor-not-allowed disabled:opacity-50
            dark:shadow-[0px_0px_1px_1px_var(--neutral-700)]
            group-hover/input:shadow-none transition duration-400"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={formData.message}
+            onChange={handleChange}
           ></textarea>
         </LabelInputContainer>
         <Button

@@ -1,49 +1,43 @@
+// app/api/contact/route.ts
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
 export async function POST(request: Request) {
-  const { name, email, subject, message }: ContactFormData =
-    await request.json();
+  const { name, email, subject, message } = await request.json();
 
-  if (!name || !email || !subject || !message) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-  }
-
-  // Configure the Nodemailer transport
+  // Set up Nodemailer transporter (using SMTP server or service like Gmail, SendGrid, etc.)
   const transporter = nodemailer.createTransport({
-    service: "gmail", // or any other email service provider
+    service: "gmail", // You can use another service, e.g., SendGrid, Mailgun, etc.
     auth: {
-      user: process.env.EMAIL, // your email address
-      pass: process.env.EMAIL_PASSWORD, // your email password or app password
+      user: process.env.EMAIL_USER, // Your email address
+      pass: process.env.EMAIL_PASS, // Your email password or app password
+    },
+    tls: {
+      rejectUnauthorized: false, // Allow self-signed certificates
     },
   });
 
-  // Compose the email
+  // Set up email options
   const mailOptions = {
-    from: email,
-    to: process.env.EMAIL, // Your email address where you want to receive the form submissions
-    subject: `New message from ${name}: ${subject}`,
-    text: `You received a new message from your portfolio contact form:\n\nName: ${name}\nEmail: ${email}\nMessage:\n${message}`,
+    from: email, // Sender email address
+    to: process.env.EMAIL_RECEIVER, // Your email address where you'll receive messages
+    subject: `A New Contact Submission from ${name}`,
+    text: `
+      Name: ${name}
+      Email: ${email}
+      Subject: ${subject}
+      Message: ${message}
+    `,
   };
 
+  // Send email
   try {
-    // Send the email
     await transporter.sendMail(mailOptions);
-    return NextResponse.json(
-      { message: "Email sent successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Failed to send email:", error);
     return NextResponse.json(
-      { error: "Error sending email", details: error },
+      { success: false, error: "Failed to send email" },
       { status: 500 }
     );
   }
