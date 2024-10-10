@@ -16,9 +16,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "David Moses - Portfolio",
   description:
-    "Welcome to my developer portfolio! I specialize in creating innovative web and software solutions using modern technologies like JavaScript, Python, and React.js. Explore my projects, skills, and experience in front-end, back-end, and full-stack development.",
+    "Welcome to my developer portfolio! I'm David, I specialize in creating innovative web and software solutions using modern technologies like JavaScript, Python, and React.js. Explore my projects, skills, and experience in front-end, back-end, and full-stack development.",
   keywords:
-    "Web Developer, Software Developer, Front-end Developer, Back-end Developer, Full-stack Developer, JavaScript Developer, Python Developer, React.js Developer, HTML/CSS Expert, Freelance Developer, Portfolio Projects, Coding Portfolio, Responsive Design, App Development, UI/UX Design, Open Source Contributor",
+    "David, David-Moses, David_Moses, Dave, Dave_codes, Web Developer, Software Developer, Front-end Developer, Back-end Developer, Full-stack Developer, JavaScript Developer, Python Developer, React.js Developer, HTML/CSS Expert, Freelance Developer, Portfolio Projects, Coding Portfolio, Responsive Design, App Development, UI/UX Design, Open Source Contributor",
   icons: {
     icon: "/favicon.jpg",
   },
