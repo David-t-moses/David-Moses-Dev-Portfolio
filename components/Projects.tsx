@@ -9,7 +9,7 @@ import TransitionWrapper from "./TransitionWrapper";
 export function Projects() {
   return (
     <section
-      className="w-full py-[100px] lg:px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto overflow-x-hidden"
+      className="relative w-full py-[100px] lg:px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto overflow-x-hidden"
       id="projects"
     >
       <div className=" absolute size-3/5 w-4/5  border bg-blue_bg -right-[60%] blur-[100px] rounded-full" />

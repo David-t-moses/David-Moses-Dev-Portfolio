@@ -28,6 +28,8 @@ export const PinContainer = ({
   return (
     <Link
       href={link}
+      target="_blank"
+      rel="noopener noreferrer"
       className={cn(
         "relative group/pin z-50  cursor-pointer flex justify-center items-center p-5 lg:p-0 h-[400px] w-full",
         containerClassName
