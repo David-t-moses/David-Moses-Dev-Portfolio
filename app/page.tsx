@@ -7,6 +7,7 @@ import Services from "@/components/Services";
 import { TechStack } from "@/components/TechStack";
 import TransitionWrapper from "@/components/TransitionWrapper";
 import Image from "next/image";
+import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Home() {
@@ -30,15 +31,21 @@ export default function Home() {
                 </p>
               </div>
               <div>
-                <button
-                  type="button"
-                  className="flex border p-2 gap-2 justify-between items-center rounded-md text-[12px] md:text-lg"
+                <Link
+                  href="https://discordapp.com/users/1277554581454458911"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <p>Connect</p>
-                  <span>
-                    <FaArrowRightLong />
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    className="flex border p-2 gap-2 justify-between items-center rounded-md text-[12px] md:text-lg"
+                  >
+                    <p>Connect</p>
+                    <span>
+                      <FaArrowRightLong />
+                    </span>
+                  </button>
+                </Link>
               </div>
             </div>
             <Image
