@@ -10,7 +10,7 @@ import TransitionWrapper from "./TransitionWrapper";
 const Contact = () => {
   return (
     <section
-      className="w-full pt-[100px] pb-5 lg:px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto overflow-x-hidden"
+      className="w-full pt-[100px] pb-5 lg:px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto overflow-hidden"
       id="contact"
     >
       <Head heading="Let's Have a Chat" className="mx-auto" />
