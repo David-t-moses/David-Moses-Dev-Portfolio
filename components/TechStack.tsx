@@ -32,7 +32,7 @@ const items = [
   {
     title: "TypeScript",
     description: "Well experienced in TypeScript",
-    header: "/typescript.jpeg",
+    header: "/Typescript.jpg",
     alt: "typescript",
     className: "md:col-span-2",
   },
@@ -53,7 +53,7 @@ const items = [
   {
     title: "React.JS",
     description: "Great proficiency in ReactJS",
-    header: "/react.jpeg",
+    header: "/React.jpg",
     alt: "react",
     className: "md:col-span-2",
   },
