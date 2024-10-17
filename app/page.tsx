@@ -2,17 +2,20 @@ import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Hero from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
+import Notification from "@/components/Notification";
 import { Projects } from "@/components/Projects";
 import Services from "@/components/Services";
 import { TechStack } from "@/components/TechStack";
 import TransitionWrapper from "@/components/TransitionWrapper";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Home() {
   return (
-    <div className="flex flex-col overflow-x-hidden">
+    <div className="relative top-0 flex flex-col overflow-x-hidden">
+      <Notification />
       <Navbar />
       <Hero />
       <About />

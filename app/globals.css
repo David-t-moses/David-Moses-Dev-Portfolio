@@ -25,3 +25,30 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
+
+.subscription-notification {
+  animation: slideDown 0.5s ease-out;
+  z-index: 1000;
+}
+
+.subscription-notification.closing {
+  animation: slideUp 0.5s ease-in;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+  }
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, -50%);
+  }
+  to {
+    transform: translate(-50%, -100%);
+  }
+}

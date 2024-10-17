@@ -3,11 +3,12 @@ import React from "react";
 import { BackgroundBeamsWithCollision } from "./ui/Background";
 import Image from "next/image";
 import TransitionWrapper from "./TransitionWrapper";
+import Notification from "./Notification";
 
 export default function Hero() {
   return (
     <header
-      className="w-full h-screen flex flex-col justify-center items-center max-md:text-center"
+      className="relative w-full h-screen flex flex-col justify-center items-center max-md:text-center"
       id="home"
     >
       <BackgroundBeamsWithCollision>
