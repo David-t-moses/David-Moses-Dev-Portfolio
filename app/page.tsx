@@ -7,7 +7,6 @@ import { Projects } from "@/components/Projects";
 import Services from "@/components/Services";
 import { TechStack } from "@/components/TechStack";
 import TransitionWrapper from "@/components/TransitionWrapper";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";

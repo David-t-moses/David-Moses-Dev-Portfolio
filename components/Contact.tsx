@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Form } from "./Form";
 import { FaDiscord, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
 import TransitionWrapper from "./TransitionWrapper";
+import Link from "next/link";
 
 const Contact = () => {
   return (
@@ -43,18 +44,38 @@ const Contact = () => {
                     <p>Africa NG</p>
                   </div>
                   <div className="flex gap-3 text-xl">
-                    <span className="cursor-pointer">
+                    <Link
+                      href="https://github.com/david-t-moses/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer"
+                    >
                       <FaGithub />
-                    </span>
-                    <span className="cursor-pointer">
+                    </Link>
+                    <Link
+                      href="https://www.linkedin.com/in/david-t-moses/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer"
+                    >
                       <FaLinkedin />
-                    </span>
-                    <span className="cursor-pointer">
+                    </Link>
+                    <Link
+                      href="https://x.com/david_t_moses"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer"
+                    >
                       <FaTwitter />
-                    </span>
-                    <span className="cursor-pointer">
+                    </Link>
+                    <Link
+                      href="https://discordapp.com/users/1277554581454458911"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer"
+                    >
                       <FaDiscord />
-                    </span>
+                    </Link>
                   </div>
                 </div>
               </div>
