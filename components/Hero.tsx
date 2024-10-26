@@ -3,7 +3,6 @@ import React from "react";
 import { BackgroundBeamsWithCollision } from "./ui/Background";
 import Image from "next/image";
 import TransitionWrapper from "./TransitionWrapper";
-import Notification from "./Notification";
 
 export default function Hero() {
   return (

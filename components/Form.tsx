@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import Button from "./ui/Button";
 import { FaPaperPlane } from "react-icons/fa6";
+import { toast } from "sonner";
 
 export function Form() {
   const [formData, setFormData] = useState({
@@ -34,12 +35,12 @@ export function Form() {
 
       if (response.ok) {
         setFormData({ name: "", email: "", subject: "", message: "" });
-        alert("Message sent successfully");
+        toast.success("Message sent successfully");
       } else {
-        alert("Failed to send message");
+        toast.error("Failed to send message");
       }
     } catch (error) {
-      alert("An error occurred. Please try again later.");
+      toast.error("An error occurred. Please try again later.");
     }
   };
 

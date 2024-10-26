@@ -66,14 +66,19 @@ const Notification: React.FC = () => {
       }`}
     >
       <div className="relative">
-        <FaXmark
-          className="absolute text-white top-3 right-3 text-2xl cursor-pointer"
-          onClick={handleClose}
-        />
-        <div className="flex flex-col justify-between items-center text-white p-20 max-sm:p-5">
-          <div className="flex flex-col gap-5">
-            <h1 className="text-2xl font-bold">Hey👋 You're Welcome!</h1>
-            <p className="">
+        <div className="flex flex-col justify-between items-center text-white p-20 max-sm:p-4">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-between gap-7">
+              <h1 className="text-2xl font-bold flex max-[420px]:flex-wrap">
+                Hey👋 You're Welcome!
+              </h1>
+              <FaXmark
+                className=" text-white text-3xl cursor-pointer"
+                onClick={handleClose}
+              />
+            </div>
+
+            <p>
               Subscribe to our newsletter now to get E-books, Resources and
               other contents helpful for your websites, businesses and career
               Weekly for FREE.
@@ -88,7 +93,7 @@ const Notification: React.FC = () => {
                   name="name"
                   placeholder="your full name"
                   type="text"
-                  className="h-12 max-sm:h-8 bg-white text-black"
+                  className="h-12 max-sm:h-10 bg-white text-black"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -101,7 +106,7 @@ const Notification: React.FC = () => {
                   name="email"
                   placeholder="your email address"
                   type="email"
-                  className="h-12 max-sm:h-8 bg-white text-black"
+                  className="h-12 max-sm:h-10 bg-white text-black"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -109,8 +114,8 @@ const Notification: React.FC = () => {
               </LabelInputContainer>
               <Button
                 answer="Subscribe"
-                className="rounded-xl h-12  max-sm:h-8 w-full max-w-full flex flex-nowrap"
-                spanClassName="rounded-xl bg-zinc-800 flex flex-nowrap"
+                className="rounded-xl h-12  max-sm:h-10 w-full max-w-full flex flex-nowrap"
+                spanClassName="rounded-md bg-zinc-800 flex flex-nowrap"
                 type="submit"
               />
 

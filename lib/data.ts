@@ -79,30 +79,24 @@ export const techStackData = [
 
 export const projectsData = [
   {
+    src: "/kbiz.png",
+    alt: "Web Design Agency Website img",
+    title: "Web Design Agency",
+    link: "https://kbiz.tech/",
+    desc: "An elegant, multi-page website designed for KBIZ Web Design Agency, featuring dynamic animations, seamless navigation, and SEO optimization.",
+  },
+  {
+    src: "/horizon.jpg",
+    alt: "horizon img",
+    title: "Horizon - Banking System",
+    link: "/horizon",
+    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+  },
+  {
     src: "/Furtniture Website.png",
     alt: "landing page project",
     title: "Furniture Landing Page",
     link: "https://furniture-landing-page.onrender.com/",
-    desc: "Modern, visually appealing website that showcases furniture collections with high-quality images and clean layouts.",
+    desc: "A sleek, responsive landing page template for furniture brands, showcasing products with high-quality visuals, and a minimalist design.",
   },
-  {
-    src: "/Dave Codes Portfolio.png",
-    alt: "Portfolio",
-    title: "Minimalistic Portfolio",
-    link: "https://dave-codes.onrender.com/",
-    desc: "Minimalist website designed to showcase creative work with a clean layout.",
-  },
-  {
-    src: "/Dave E-resume.png",
-    alt: "e-resume image",
-    title: "Sleek E-Resume",
-    link: "https://david-t-moses.github.io/e-resume/",
-    desc: "Modern digital resume platform with a clean layout and responsive design",
-  },
-  // {
-  //   src: "/image-8.png",
-  //   alt: "gallery image",
-  //   title: "Gallery App Clone",
-  //   desc: "Modern digital resume platform with a clean layout and responsive design",
-  // },
 ];
