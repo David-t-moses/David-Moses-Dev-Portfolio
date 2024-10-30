@@ -89,7 +89,7 @@ export const projectsData = [
     src: "/horizon.jpg",
     alt: "horizon img",
     title: "Horizon - Banking System",
-    link: "/horizon",
+    link: "https://horizon-banking-system-jet.vercel.app/",
     desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
   },
   {
