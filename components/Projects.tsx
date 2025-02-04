@@ -14,7 +14,7 @@ export function Projects() {
     >
       <div className=" absolute size-3/5 w-4/5  border bg-blue_bg -right-[60%] blur-[100px] rounded-full" />
       <div className=" absolute size-3/5 w-4/5  border bg-blue_bg -left-[60%] blur-[100px] rounded-full" />
-      <Head heading="Some Recent Projects" className="mx-auto" />
+      <Head heading="Some Latest Projects" className="mx-auto" />
       <div className="max-w-5xl flex flex-col mx-auto justify-center w-full">
         <TransitionWrapper>
           <div className="flex max-md:flex-col w-full justify-center items-center gap-10 flex-wrap ">

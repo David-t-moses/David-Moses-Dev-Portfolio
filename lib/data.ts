@@ -79,6 +79,13 @@ export const techStackData = [
 
 export const projectsData = [
   {
+    src: "/pharma.png",
+    alt: "Pharma img",
+    title: "Pharma - Healhcare CRM",
+    link: "https://pharma-app-983v.onrender.com",
+    desc: "Revolutionizing healthcare management with seamless integration.",
+  },
+  {
     src: "/kbiz.png",
     alt: "Web Design Agency Website img",
     title: "Web Design Agency",
@@ -86,17 +93,24 @@ export const projectsData = [
     desc: "An elegant, multi-page website designed for KBIZ Web Design Agency, featuring dynamic animations, seamless navigation, and SEO optimization.",
   },
   {
-    src: "/horizon.jpg",
-    alt: "horizon img",
-    title: "Horizon - Banking System",
-    link: "https://horizon-banking-system-jet.vercel.app/",
-    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+    src: "/sudarshan-co.png",
+    alt: "Sudarshan Website img",
+    title: "Sudarshan Construction Co.",
+    link: "https://sudarshan-construction.vercel.app/",
+    desc: "Delivering quality construction solutions with trust and excellence.",
   },
-  {
-    src: "/Furtniture Website.png",
-    alt: "landing page project",
-    title: "Furniture Landing Page",
-    link: "https://furniture-landing-page.onrender.com/",
-    desc: "A sleek, responsive landing page template for furniture brands, showcasing products with high-quality visuals, and a minimalist design.",
-  },
+  // {
+  //   src: "/horizon.jpg",
+  //   alt: "horizon img",
+  //   title: "Horizon - Banking System",
+  //   link: "https://horizon-banking-system-jet.vercel.app/",
+  //   desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+  // },
+  // {
+  //   src: "/Furtniture Website.png",
+  //   alt: "landing page project",
+  //   title: "Furniture Landing Page",
+  //   link: "https://furniture-landing-page.onrender.com/",
+  //   desc: "A sleek, responsive landing page template for furniture brands, showcasing products with high-quality visuals, and a minimalist design.",
+  // },
 ];
