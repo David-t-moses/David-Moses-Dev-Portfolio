@@ -34,7 +34,7 @@ export default function Home() {
               </div>
               <div>
                 <Link
-                  href="https://discordapp.com/users/1277554581454458911"
+                  href="https://www.linkedin.com/in/dtm-web-solutions/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
