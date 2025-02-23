@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   keywords:
     "David, David-Moses, David_Moses, Dave, Dave_codes, Web Developer, Software Developer, Front-end Developer, Back-end Developer, Full-stack Developer, JavaScript Developer, Python Developer, React.js Developer, HTML/CSS Expert, Freelance Developer, Portfolio Projects, Coding Portfolio, Responsive Design, App Development, UI/UX Design, Open Source Contributor",
   icons: {
-    icon: "/favicon.jpg",
+    icon: "/logo.png",
   },
 };
 

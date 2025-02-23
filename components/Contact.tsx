@@ -4,7 +4,7 @@ import React from "react";
 import Head from "./Head";
 import Image from "next/image";
 import { Form } from "./Form";
-import { FaDiscord, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
+import { FaFacebook, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
 import TransitionWrapper from "./TransitionWrapper";
 import Link from "next/link";
 
@@ -61,7 +61,7 @@ const Contact = () => {
                       <FaLinkedin />
                     </Link>
                     <Link
-                      href="https://x.com/david_t_moses"
+                      href="https://x.com/david-t-moses"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="cursor-pointer"
@@ -69,12 +69,12 @@ const Contact = () => {
                       <FaTwitter />
                     </Link>
                     <Link
-                      href="https://discordapp.com/users/1277554581454458911"
+                      href="https://www.facebook.com/profile.php?id=61572584128806"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="cursor-pointer"
                     >
-                      <FaDiscord />
+                      <FaFacebook />
                     </Link>
                   </div>
                 </div>

@@ -86,6 +86,13 @@ export const projectsData = [
     desc: "Revolutionizing healthcare management with seamless integration.",
   },
   {
+    src: "/Elevate Media.png",
+    alt: "Elevate Media img",
+    title: "Elevate Media Website",
+    link: "https://elevatemedia-marketing.com/",
+    desc: "A visually striking, high-performance marketing agency website with seamless animations and an engaging UI/UX.",
+  },
+  {
     src: "/kbiz.png",
     alt: "Web Design Agency Website img",
     title: "Web Design Agency",
@@ -99,13 +106,20 @@ export const projectsData = [
     link: "https://sudarshan-construction.vercel.app/",
     desc: "Delivering quality construction solutions with trust and excellence.",
   },
-  // {
-  //   src: "/horizon.jpg",
-  //   alt: "horizon img",
-  //   title: "Horizon - Banking System",
-  //   link: "https://horizon-banking-system-jet.vercel.app/",
-  //   desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
-  // },
+  {
+    src: "/dave-portfolio.png",
+    alt: "Dave's Portfolio img",
+    title: "Stunning Portfolio",
+    link: "https://david-moses.vercel.app",
+    desc: "A sleek, modern portfolio showcasing my expertise in crafting dynamic, conversion-driven web experiences.",
+  },
+  {
+    src: "/horizon.jpg",
+    alt: "horizon img",
+    title: "Horizon - Banking System",
+    link: "https://horizon-banking-system-jet.vercel.app/",
+    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+  },
   // {
   //   src: "/Furtniture Website.png",
   //   alt: "landing page project",
