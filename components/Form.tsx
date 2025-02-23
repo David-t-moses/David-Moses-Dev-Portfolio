@@ -8,7 +8,6 @@ import Button from "./ui/Button";
 import { FaPaperPlane } from "react-icons/fa6";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { sendContactEmail } from "@/lib/actions/contact";
 
 export function Form() {
   const [formData, setFormData] = useState({
@@ -33,7 +32,7 @@ export function Form() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid()) return;
-  
+
     setLoading(true);
     try {
       const response = await fetch("/api/contact", {
@@ -43,9 +42,9 @@ export function Form() {
         },
         body: JSON.stringify(formData),
       });
-  
+
       const result = await response.json();
-  
+
       if (result.success) {
         setShowModal(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
@@ -57,7 +56,6 @@ export function Form() {
     }
     setLoading(false);
   };
-  
 
   return (
     <>
@@ -117,7 +115,7 @@ export function Form() {
             ></textarea>
           </LabelInputContainer>
           <Button
-            answer="Submit"
+            answer={`${loading ? "Submitting..." : "Submit"}`}
             icon={<FaPaperPlane />}
             className={cn(
               "rounded-xl h-12 w-full max-w-full flex flex-nowrap",
@@ -163,7 +161,7 @@ export function Form() {
                     onClick={() => setShowModal(false)}
                     className="bg-[#03186B] text-white px-8 py-3 rounded-xl hover:bg-[#03186B]/80 transition-colors duration-300 font-medium"
                   >
-                    Close Window
+                    Close
                   </button>
                 </div>
               </div>
