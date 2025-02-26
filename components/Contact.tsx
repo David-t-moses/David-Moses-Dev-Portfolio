@@ -53,7 +53,7 @@ const Contact = () => {
                       <FaGithub />
                     </Link>
                     <Link
-                      href="https://www.linkedin.com/in/dtm-web-solutions/"
+                      href="https://www.linkedin.com/in/dtm-tech-solutions/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="cursor-pointer"
