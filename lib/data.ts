@@ -21,12 +21,12 @@ export const aboutData = [
 
 export const servicesData = [
   {
-    img: "/image-5.png",
-    answer: "Mobile App Development",
-  },
-  {
     img: "/image-6.png",
     answer: "Website Development",
+  },
+  {
+    img: "/image-5.png",
+    answer: "Mobile App Development",
   },
   {
     img: "/image-7.png",
