@@ -21,14 +21,14 @@ export default function Hero() {
                 <span className="text-blue-400"> REALITY!</span>
               </h1>
               <p className="text-white mt-7 max-md:text-sm">
-                Innovative Web Solutions Tailored for Your Success Unlock the
+                Innovative Tech Solutions Tailored for Your Success Unlock the
                 full potential of your digital presence with custom web
                 development designed to captivate, engage, and convert. Let's
                 turn your ideas into stunning websites that not only look
                 amazing but perform flawlessly.
               </p>
               <p className="text-white mt-7 text-[18px] font-bold">
-                Hi i&apos;m David - Dtm Web Solutions | High ROI Expert.
+                Hi i&apos;m David - Dtm Tech Solutions | High ROI Expert.
               </p>
             </div>
 
