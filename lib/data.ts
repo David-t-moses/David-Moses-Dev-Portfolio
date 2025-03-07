@@ -93,33 +93,20 @@ export const projectsData = [
     desc: "A visually striking, high-performance marketing agency website with seamless animations and an engaging UI/UX.",
   },
   {
-    src: "/kbiz.png",
-    alt: "Web Design Agency Website img",
-    title: "Web Design Agency",
-    link: "https://kbiz.tech/",
-    desc: "An elegant, multi-page website designed for KBIZ Web Design Agency, featuring dynamic animations, seamless navigation, and SEO optimization.",
-  },
-  {
-    src: "/sudarshan-co.png",
-    alt: "Sudarshan Website img",
-    title: "Sudarshan Construction Co.",
-    link: "https://sudarshan-construction.vercel.app/",
-    desc: "Delivering quality construction solutions with trust and excellence.",
-  },
-  {
-    src: "/dave-portfolio.png",
-    alt: "Dave's Portfolio img",
-    title: "Stunning Portfolio",
-    link: "https://david-moses.vercel.app",
-    desc: "A sleek, modern portfolio showcasing my expertise in crafting dynamic, conversion-driven web experiences.",
-  },
-  {
     src: "/horizon.jpg",
     alt: "horizon img",
     title: "Horizon - Banking System",
     link: "https://horizon-banking-system-jet.vercel.app/",
     desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
   },
+  // {
+  //   src: "/dave-portfolio.png",
+  //   alt: "Dave's Portfolio img",
+  //   title: "Stunning Portfolio",
+  //   link: "https://david-moses.vercel.app",
+  //   desc: "A sleek, modern portfolio showcasing my expertise in crafting dynamic, conversion-driven web experiences.",
+  // },
+
   // {
   //   src: "/Furtniture Website.png",
   //   alt: "landing page project",

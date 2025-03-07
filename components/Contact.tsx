@@ -4,7 +4,7 @@ import React from "react";
 import Head from "./Head";
 import Image from "next/image";
 import { Form } from "./Form";
-import { FaFacebook, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa6";
+import { FaFacebook, FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import TransitionWrapper from "./TransitionWrapper";
 import Link from "next/link";
 
@@ -33,16 +33,22 @@ const Contact = () => {
                   </h2>
                   <div className="md:w-4/5">
                     <h3 className="font-bold">EMAIL</h3>
-                    <p>davidtmoses5@gmail.com</p>
+                    <a
+                      href="mailto:davidtmoses5@gmail.com"
+                      className="text-white hover:underline"
+                    >
+                      davidtmoses5@gmail.com
+                    </a>
                   </div>
+
                   <div className="md:w-4/5">
                     <h3 className="font-bold">WORKING HOURS</h3>
                     <p>9:00AM - 5:00PM</p>
                   </div>
-                  <div className="md:w-4/5">
+                  {/* <div className="md:w-4/5">
                     <h3 className="font-bold">ADDRESS</h3>
                     <p>Africa NG</p>
-                  </div>
+                  </div> */}
                   <div className="flex gap-3 text-xl">
                     <Link
                       href="https://github.com/david-t-moses/"
@@ -66,7 +72,7 @@ const Contact = () => {
                       rel="noopener noreferrer"
                       className="cursor-pointer"
                     >
-                      <FaTwitter />
+                      <FaXTwitter />
                     </Link>
                     <Link
                       href="https://www.facebook.com/profile.php?id=61572584128806"
