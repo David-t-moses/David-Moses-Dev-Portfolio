@@ -100,7 +100,7 @@ export const projectsData = [
     desc: "A professional web design agency platform showcasing services, portfolio, and client testimonials with a modern, responsive design.",
   },
   {
-    src: "/sudarshan.png",
+    src: "/sudarshan-co.png",
     alt: "Sudarshan Construction Img",
     title: "Sudarshan Construction",
     link: "https://sudarshan-construction.vercel.app/",
