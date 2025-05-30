@@ -85,6 +85,24 @@ export const projectsData = [
   //   link: "https://pharma-app-983v.onrender.com",
   //   desc: "Revolutionizing healthcare management with seamless integration.",
   // },
+<<<<<<< HEAD
+  {
+    src: "/horizon.jpg",
+    alt: "horizon img",
+    title: "Horizon - Banking System",
+    link: "https://horizon-banking-system-jet.vercel.app/",
+    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+  },
+=======
+>>>>>>> 52f54f1cdc053dc61c71b51efac72693fa595f1b
+  {
+    src: "/DTM-Tech-Solutions.png",
+    alt: "DTM Tech Solutions Preview",
+    title: "DTM Tech Solutions",
+    link: "https://dtmtechsolutions.vercel.app/",
+    desc: "A cutting-edge tech consultancy website built with modern frameworks, featuring dynamic content loading for IT services and solutions.",
+  },
+  
   {
     src: "/Elevate Media.png",
     alt: "Elevate Media img",
@@ -93,6 +111,13 @@ export const projectsData = [
     desc: "A visually striking, high-performance marketing agency website with seamless animations and an engaging UI/UX.",
   },
   {
+<<<<<<< HEAD
+    src: "/Kbiz.png",
+    alt: "Kbiz Tech Preview",
+    title: "Kbiz Tech",
+    link: "https://kbiz.tech/",
+    desc: "A corporate business portal optimized for performance, and a minimalist interface for professional audiences.",
+=======
     src: "/kbiz.png",
     alt: "Kbiz Web Design Img",
     title: "Kbiz Web Design",
@@ -105,14 +130,23 @@ export const projectsData = [
     title: "Sudarshan Construction",
     link: "https://sudarshan-construction.vercel.app/",
     desc: "A comprehensive website for a construction company featuring project showcases, services, and contact information with an elegant, professional design.",
+>>>>>>> 52f54f1cdc053dc61c71b51efac72693fa595f1b
   },
-  // {
-  //   src: "/dave-portfolio.png",
-  //   alt: "Dave's Portfolio img",
-  //   title: "Stunning Portfolio",
-  //   link: "https://david-moses.vercel.app",
-  //   desc: "A sleek, modern portfolio showcasing my expertise in crafting dynamic, conversion-driven web experiences.",
-  // },
+  {
+    src: "/sudarshan-co.png",
+    alt: "Sudarshan Construction Preview",
+    title: "Sudarshan Construction",
+    link: "https://sudarshan-construction.vercel.app/",
+    desc: "A visually structured construction company website showcasing projects, safety standards, and contact accessibility—built for trust and clarity in the industry.",
+  },
+    {
+    src: "/dave-portfolio.png",
+    alt: "Dave's Portfolio img",
+    title: "Stunning Portfolio",
+    link: "https://david-moses.vercel.app",
+    desc: "A sleek, modern portfolio showcasing my expertise in crafting dynamic, conversion-driven web experiences.",
+  },
+
 
   // {
   //   src: "/Furtniture Website.png",
