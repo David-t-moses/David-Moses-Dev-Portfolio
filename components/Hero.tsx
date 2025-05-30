@@ -28,7 +28,7 @@ export default function Hero() {
                 amazing but perform flawlessly.
               </p>
               <p className="text-white mt-7 text-[18px] font-bold">
-                Hi i&apos;m David - Dtm Tech Solutions | High ROI Expert.
+                Hi i&apos;m David | Full Stack Web Developer.
               </p>
             </div>
 
