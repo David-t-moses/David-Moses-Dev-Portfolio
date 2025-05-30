@@ -104,7 +104,7 @@ export const projectsData = [
     src: "/kbiz.png",
     alt: "Kbiz Web Design Img",
     title: "Kbiz Web Design",
-    link: "https:/kbiz.tech",
+    link: "https://kbiz.tech",
     desc: "A professional web design agency platform showcasing services, portfolio, and client testimonials with a modern, responsive design.",
   },
   {
