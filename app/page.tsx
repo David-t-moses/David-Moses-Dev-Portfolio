@@ -34,7 +34,7 @@ export default function Home() {
               </div>
               <div>
                 <Link
-                  href="https://www.linkedin.com/in/dtm-tech-solutions/"
+                  href="https://x.com/david_t_moses/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
