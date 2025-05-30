@@ -79,12 +79,20 @@ export const techStackData = [
 
 export const projectsData = [
   {
-    src: "/pharma.png",
-    alt: "Pharma img",
-    title: "Pharma - Healhcare CRM",
-    link: "https://pharma-app-983v.onrender.com",
-    desc: "Revolutionizing healthcare management with seamless integration.",
+    src: "/horizon.jpg",
+    alt: "horizon img",
+    title: "Horizon - Banking System",
+    link: "https://horizon-banking-system-jet.vercel.app/",
+    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
   },
+  {
+    src: "/DTM-Tech-Solutions.png",
+    alt: "DTM Tech Solutions Preview",
+    title: "DTM Tech Solutions",
+    link: "https://dtmtechsolutions.vercel.app/",
+    desc: "A cutting-edge tech consultancy website built with modern frameworks, featuring dynamic content loading for IT services and solutions.",
+  },
+
   {
     src: "/Elevate Media.png",
     alt: "Elevate Media img",
@@ -93,11 +101,18 @@ export const projectsData = [
     desc: "A visually striking, high-performance marketing agency website with seamless animations and an engaging UI/UX.",
   },
   {
-    src: "/horizon.jpg",
-    alt: "horizon img",
-    title: "Horizon - Banking System",
-    link: "https://horizon-banking-system-jet.vercel.app/",
-    desc: "A secure, user-friendly web platform - Horizon Banking, providing seamless navigation, real-time transaction tracking, and account management.",
+    src: "/kbiz.png",
+    alt: "Kbiz Web Design Img",
+    title: "Kbiz Web Design",
+    link: "https:/kbiz.tech",
+    desc: "A professional web design agency platform showcasing services, portfolio, and client testimonials with a modern, responsive design.",
+  },
+  {
+    src: "/sudarshan-co.png",
+    alt: "Sudarshan Construction Img",
+    title: "Sudarshan Construction",
+    link: "https://sudarshan-construction.vercel.app/",
+    desc: "A comprehensive website for a construction company featuring project showcases, services, and contact information with an elegant, professional design.",
   },
   {
     src: "/dave-portfolio.png",
