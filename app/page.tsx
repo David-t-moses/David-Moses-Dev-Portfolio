@@ -21,7 +21,7 @@ export default function Home() {
       <Services />
       <TransitionWrapper>
         <div className="w-full py-[100px] px-10 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto max-sm:hidden">
-          <div className="relative max-w-5xl flex flex-col mx-auto bg justify-center w-full max-h-36 overflow-hidden rounded-lg text-white">
+          <div className="relative max-w-7xl flex flex-col mx-auto bg justify-center w-full max-h-36 overflow-hidden rounded-lg text-white">
             <div className="h-full w-full bg-blue_bg absolute top-0 left-0 opacity-70 z-10 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]" />
             <div className="flex justify-between absolute top-0 left-0 z-20 w-full h-full gap-6 p-3 md:p-8 items-center">
               <div className="">

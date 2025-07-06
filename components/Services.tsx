@@ -128,7 +128,7 @@ const Services = () => {
       <Head heading="Services" className="mx-auto" />
 
       <motion.div
-        className="max-w-6xl w-full px-4"
+        className="max-w-7xl w-full px-4"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

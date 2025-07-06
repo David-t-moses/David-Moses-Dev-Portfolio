@@ -133,7 +133,7 @@ const About: React.FC = () => {
       <Head heading="About Me" />
 
       <motion.div
-        className="max-w-6xl w-full px-4 py-8"
+        className="max-w-7xl w-full px-4"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
