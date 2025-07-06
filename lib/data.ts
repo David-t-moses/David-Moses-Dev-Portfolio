@@ -3,19 +3,19 @@ export const aboutData = [
     img: "/image-1.png",
     question: "WHY ME?",
     answer:
-      "I provide tailored web development solutions that drive growth, combining expertise in both frontend and backend technologies. With a focus on results, clear communication, and fast turnaround, I ensure your website is optimized for success. My services are affordable, cutting-edge, and come with ongoing support to keep your site performing at its best.",
+      "I deliver tailored web development solutions that drive growth, combining expertise in frontend and backend technologies. With a focus on results, clear communication, and fast turnaround, I ensure your website is optimized for success with affordable, cutting-edge services and ongoing support.",
   },
   {
     img: "/image-2.png",
     question: "HOW I WORK",
     answer:
-      "I begin by understanding your business needs, then design and develop a customized, responsive website. After thorough testing and gathering your feedback, I launch the site and provide ongoing support. Clear communication ensures you're involved and informed every step of the way.",
+      "I start by understanding your business needs, then design and develop a customized, responsive website. After thorough testing and gathering feedback, I launch your site and provide ongoing support. Clear communication keeps you informed every step of the way.",
   },
   {
     img: "/image-3.png",
     question: "PROVEN RESULTS",
     answer:
-      "I'm committed to delivering proven results by focusing on what truly matters: your business growth. Every website I build is designed with performance, user experience, and conversion optimization in mind. I use data-driven approaches and industry best practices to ensure your website not only looks great but also delivers measurable success. My goal is to create a digital platform that drives real, impactful results for your business.",
+      "I'm committed to delivering measurable results by focusing on your business growth. Every website I build prioritizes performance, user experience, and conversion optimization using data-driven approaches and industry best practices for real, impactful success.",
   },
 ];
 

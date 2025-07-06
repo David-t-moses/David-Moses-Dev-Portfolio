@@ -1,0 +1,35 @@
+{
+  "name": "David Moses - Full Stack Web Developer",
+  "short_name": "David Moses",
+  "description": "Professional Full Stack Web Developer creating innovative digital solutions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#03186B",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo-2.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-2.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-2.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "developer"],
+  "lang": "en"
+}

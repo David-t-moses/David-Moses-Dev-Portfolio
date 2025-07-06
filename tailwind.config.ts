@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+      },
       colors: {
         blue_bg: "#03186B",
       },

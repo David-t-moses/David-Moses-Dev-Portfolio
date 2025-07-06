@@ -15,7 +15,7 @@ export const PinContainer = ({
   link?: string;
 }) => {
   const [transform, setTransform] = useState(
-    "translate(-50%,-50%) rotateX(0deg)"
+    "translate(-50%,-50%) rotateX(0deg) scale(1)"
   );
 
   const onMouseEnter = () => {
@@ -26,12 +26,9 @@ export const PinContainer = ({
   };
 
   return (
-    <Link
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
       className={cn(
-        "relative group/pin z-50  cursor-pointer flex justify-center items-center p-5 lg:p-0 h-[400px] w-full",
+        "relative group/pin z-50 cursor-pointer w-full h-full",
         containerClassName
       )}
       onMouseEnter={onMouseEnter}
@@ -42,17 +39,24 @@ export const PinContainer = ({
           perspective: "1000px",
           transform: "rotateX(70deg) translateZ(0deg)",
         }}
-        className="flex justify-center items-center h-full w-full"
+        className="absolute inset-0 w-full h-full flex justify-center items-center"
       >
         <div
           style={{
             transform: transform,
           }}
-          className="absolute left-1/2 p-4 top-1/2  flex flex-col justify-between items-center  rounded-2xl  shadow-[0_8px_16px_rgb(0_0_0/0.4)] border bg-transparent border-[#6567ea] group-hover/pin:border-white/[0.2] transition duration-700  h-full w-full"
+          className="absolute left-1/2 top-1/2 w-full h-full max-w-sm rounded-2xl shadow-[0_8px_16px_rgb(0_0_0/0.4)] border border-[#6567ea] group-hover/pin:border-white/[0.2] transition duration-700 overflow-hidden bg-slate-950"
         >
-          <div className={cn(" relative z-50 ", className)}>{children}</div>
+          <Link
+            href={link || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn("relative z-50 w-full h-full block", className)}
+          >
+            {children}
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
