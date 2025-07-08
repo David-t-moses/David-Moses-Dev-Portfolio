@@ -31,7 +31,7 @@ export function TechStack() {
     {
       title: "React.JS",
       description: "Great proficiency in building dynamic user interfaces",
-      header: "/React.webp",
+      header: "/react.webp",
       alt: "react",
       className: "md:col-span-2",
     },
