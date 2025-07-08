@@ -120,101 +120,56 @@ export default function Hero() {
           }}
         />
 
-        {/* Strategic Floating Code Tags - Closer to Center */}
-        <motion.div
-          className="absolute top-32 left-1/4 bg-gray-900/80 backdrop-blur-sm border border-blue-400/20 rounded-lg px-3 py-2 text-xs text-green-400 font-mono"
-          animate={{
-            y: [-5, 5, -5],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          {"<html>"}
-        </motion.div>
+        {/* Container for max-w-7xl constraint */}
+        <div className="absolute inset-0 max-w-7xl mx-auto px-4 pointer-events-none">
+          {/* Clean Floating Code Tags - Outside centered content */}
+          <motion.div
+            className="absolute hidden lg:block top-32 left-8 bg-gray-900/70 backdrop-blur-sm border border-blue-400/30 rounded-lg px-3 py-2 text-xs text-blue-400 font-mono"
+            animate={{
+              y: [-4, 4, -4],
+              opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            {"<developer />"}
+          </motion.div>
 
-        <motion.div
-          className="absolute top-28 right-1/4 bg-gray-900/80 backdrop-blur-sm border border-purple-400/20 rounded-lg px-3 py-2 text-xs text-purple-400 font-mono"
-          animate={{
-            y: [5, -5, 5],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        >
-          {"className='flex'"}
-        </motion.div>
+          <motion.div
+            className="absolute hidden lg:block top-40 right-8 bg-gray-900/70 backdrop-blur-sm border border-purple-400/30 rounded-lg px-3 py-2 text-xs text-purple-400 font-mono"
+            animate={{
+              y: [4, -4, 4],
+              opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          >
+            {"const build = () => 'magic'"}
+          </motion.div>
 
-        <motion.div
-          className="absolute top-1/2 left-16 transform -translate-y-1/2 bg-gray-900/80 backdrop-blur-sm border border-cyan-400/20 rounded-lg px-3 py-2 text-xs text-cyan-400 font-mono"
-          animate={{
-            y: [-3, 3, -3],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        >
-          {"const dev = () => {}"}
-        </motion.div>
-
-        <motion.div
-          className="absolute top-1/2 right-16 transform -translate-y-1/2 bg-gray-900/80 backdrop-blur-sm border border-yellow-400/20 rounded-lg px-3 py-2 text-xs text-yellow-400 font-mono"
-          animate={{
-            y: [4, -4, 4],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 4.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.5,
-          }}
-        >
-          {"npm install"}
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-24 left-1/4 bg-gray-900/80 backdrop-blur-sm border border-pink-400/20 rounded-lg px-3 py-2 text-xs text-pink-400 font-mono"
-          animate={{
-            y: [-4, 4, -4],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 5.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.5,
-          }}
-        >
-          {"bg-gradient-to-r"}
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-20 right-1/4 bg-gray-900/80 backdrop-blur-sm border border-orange-400/20 rounded-lg px-3 py-2 text-xs text-orange-400 font-mono"
-          animate={{
-            y: [3, -3, 3],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 4.8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2.5,
-          }}
-        >
-          {"</developer>"}
-        </motion.div>
+          <motion.div
+            className="absolute hidden lg:block bottom-32 left-12 bg-gray-900/70 backdrop-blur-sm border border-cyan-400/30 rounded-lg px-3 py-2 text-xs text-cyan-400 font-mono"
+            animate={{
+              y: [-3, 3, -3],
+              opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          >
+            {"npm run dev"}
+          </motion.div>
+        </div>
 
         {/* Main Content */}
         <motion.div
@@ -281,16 +236,18 @@ export default function Hero() {
             variants={itemVariants}
             className="flex flex-wrap justify-center gap-4 mb-12"
           >
-            <motion.button
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)",
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              View My Work
-            </motion.button>
+            <Link href="#projects">
+              <motion.button
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 10px 30px rgba(59, 130, 246, 0.3)",
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View My Work
+              </motion.button>
+            </Link>
 
             <Link
               href="https://calendly.com/davidtmoses5/30min"
@@ -307,10 +264,10 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          {/* Tech Stack */}
+          {/* Tech Stack - Hidden on screens 320px and below */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-wrap justify-center items-center gap-3"
+            className="hidden min-[321px]:flex flex-wrap justify-center items-center gap-3"
           >
             <span className="text-gray-500 text-sm mr-4 flex items-center">
               Tech Stack:

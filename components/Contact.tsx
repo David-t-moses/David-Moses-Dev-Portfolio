@@ -196,7 +196,7 @@ const Contact = () => {
       <Head heading="Let's Have a Chat" className="mx-auto" />
 
       <motion.div
-        className="max-w-7xl flex flex-col mx-auto justify-center w-full px-4"
+        className="max-w-7xl flex flex-col mx-auto justify-center w-full px-4 xl:px-14"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

@@ -31,14 +31,14 @@ export function TechStack() {
     {
       title: "React.JS",
       description: "Great proficiency in building dynamic user interfaces",
-      header: "/React.jpg",
+      header: "/React.webp",
       alt: "react",
       className: "md:col-span-2",
     },
     {
       title: "Next.JS",
       description: "Expert in building fullstack web applications with Next.js",
-      header: "/next.jpeg",
+      header: "/nextjs.webp",
       alt: "next",
       className: "md:col-span-3",
     },
@@ -59,6 +59,7 @@ export function TechStack() {
   }) => {
     return (
       <motion.div
+        id="tech-stack"
         className={cn(
           "relative group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col space-y-4 rounded-xl overflow-hidden",
           className
@@ -150,7 +151,7 @@ export function TechStack() {
   };
 
   return (
-    <div className="relative w-full py-[100px] lg:px-5 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto">
+    <div className="relative w-full py-[100px] flex flex-col justify-center items-center max-md:text-center bg-slate-950">
       {/* Background Effects */}
       <motion.div
         className="absolute size-3/5 w-4/5 border bg-blue_bg -right-[60%] blur-[100px] rounded-full"
@@ -165,33 +166,35 @@ export function TechStack() {
         }}
       />
 
-      <Head heading="My Tech Stack" className="mx-auto" />
+      <div className="max-w-7xl w-full px-4 xl:px-14">
+        <Head heading="My Tech Stack" className="mx-auto" />
 
-      <motion.div
-        className="max-w-7xl w-full px-4"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-          {techStackData.map((item, i) => (
-            <motion.div
-              key={i}
-              className={cn("", item.className)}
-              variants={itemVariants}
-            >
-              <TechCard
-                title={item.title}
-                description={item.description}
-                header={item.header}
-                alt={item.alt}
-                className="h-full min-h-[260px]"
-              />
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+        <motion.div
+          className="w-full"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            {techStackData.map((item, i) => (
+              <motion.div
+                key={i}
+                className={cn("", item.className)}
+                variants={itemVariants}
+              >
+                <TechCard
+                  title={item.title}
+                  description={item.description}
+                  header={item.header}
+                  alt={item.alt}
+                  className="h-full min-h-[260px]"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

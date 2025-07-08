@@ -13,7 +13,7 @@ export function Projects() {
   const projectsData = [
     // 1. Lydia Esenam (New)
     {
-      src: "/lydiaesenam.jpg",
+      src: "/lydiaesenam.png",
       alt: "Lydia Esenam Personal Brand",
       title: "Lydia Esenam - Education Consultant",
       link: "https://lydiaesenam.ca/",
@@ -29,7 +29,7 @@ export function Projects() {
     },
     // 3. CloudeSports Tokens (New)
     {
-      src: "/cloudesports-tokens.jpg",
+      src: "/cloudesports-tokens.png",
       alt: "CloudeSports Tokens Platform",
       title: "CloudeSports Fortnite Tokens",
       link: "https://cloudesports-tokens.vercel.app/",
@@ -45,7 +45,7 @@ export function Projects() {
     },
     // 5. Nokless (New)
     {
-      src: "/nokless.jpg",
+      src: "/nokless.png",
       alt: "Nokless Smart Security",
       title: "Nokless Security SaaS",
       link: "https://nokless.vercel.app/",
@@ -159,7 +159,7 @@ export function Projects() {
 
       <Head heading="Some Latest Projects" className="mx-auto" />
 
-      <div className="max-w-7xl flex flex-col mx-auto justify-center w-full px-4 pt-10">
+      <div className="max-w-7xl flex flex-col mx-auto justify-center w-full px-4 xl:px-14 pt-10">
         <LayoutGroup>
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full justify-items-center"

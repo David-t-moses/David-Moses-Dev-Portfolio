@@ -122,34 +122,36 @@ const Services = () => {
 
   return (
     <section
-      className="w-full py-[100px] p-3 flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto"
+      className="w-full py-[100px] flex flex-col justify-center items-center max-md:text-center bg-slate-950"
       id="services"
     >
-      <Head heading="Services" className="mx-auto" />
+      <div className="max-w-7xl w-full px-4">
+        <Head heading="Services" className="mx-auto" />
 
-      <motion.div
-        className="max-w-7xl w-full px-4"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto justify-center w-full">
-          {servicesData.map((item, index) => (
-            <motion.div
-              key={`${item.answer}-${index}`}
-              className="w-full flex justify-center"
-              variants={itemVariants}
-            >
-              <ServiceCard
-                img={item.img}
-                answer={item.answer}
-                className="w-full max-w-[320px] min-h-[200px]"
-              />
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+        <motion.div
+          className="w-full"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mx-auto justify-center w-full">
+            {servicesData.map((item, index) => (
+              <motion.div
+                key={`${item.answer}-${index}`}
+                className="w-full flex justify-center"
+                variants={itemVariants}
+              >
+                <ServiceCard
+                  img={item.img}
+                  answer={item.answer}
+                  className="w-full max-w-[320px] min-h-[200px]"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 };
