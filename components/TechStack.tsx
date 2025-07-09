@@ -61,7 +61,7 @@ export function TechStack() {
       <motion.div
         id="tech-stack"
         className={cn(
-          "relative group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between flex flex-col space-y-4 rounded-xl overflow-hidden",
+          "relative group/bento hover:shadow-xl transition duration-200 shadow-input shadow-none p-4 bg-black border-white/[0.2] border border-transparent justify-between flex flex-col space-y-4 rounded-xl overflow-hidden",
           className
         )}
         whileHover={{
