@@ -10,7 +10,7 @@ export function TechStack() {
     {
       title: "TypeScript",
       description: "Well experienced in TypeScript for type-safe development",
-      header: "/Typescript.png",
+      header: "/typescript.webp",
       alt: "typescript",
       className: "md:col-span-2",
     },
@@ -28,18 +28,20 @@ export function TechStack() {
       alt: "tailwind",
       className: "md:col-span-1",
     },
-    {
-      title: "React.JS",
-      description: "Great proficiency in building dynamic user interfaces",
-      header: "/react.webp",
-      alt: "react",
-      className: "md:col-span-2",
-    },
+
     {
       title: "Next.JS",
       description: "Expert in building fullstack web applications with Next.js",
       header: "/nextjs.webp",
       alt: "next",
+      className: "md:col-span-2",
+    },
+    {
+      title: "Node.js",
+      description:
+        "Strong expertise in building scalable backend applications and APIs",
+      header: "/node.jpg",
+      alt: "nodejs",
       className: "md:col-span-3",
     },
   ];
