@@ -261,7 +261,7 @@ export default function Hero() {
         </div>
 
         {/* Floating Code Editor - Centered */}
-        <div className="max-w-5xl w-full relative select-none">
+        <div className="max-w-5xl w-full relative select-none max-[550px]:hidden">
           <div className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/70 via-slate-800/60 to-slate-900/70 border border-indigo-500/30 rounded-3xl shadow-[0_0_80px_rgba(99,102,241,0.4),0_0_40px_rgba(139,92,246,0.3)] overflow-hidden transform hover:scale-[1.02] hover:shadow-[0_0_100px_rgba(99,102,241,0.5),0_0_60px_rgba(139,92,246,0.4)] transition-all duration-500 max-h-96 relative group ring-1 ring-white/10">
             {/* Editor Header */}
             <div className="bg-gradient-to-r from-slate-800/90 via-slate-800/80 to-slate-800/90 px-8 py-5 border-b border-indigo-500/20 flex items-center justify-between backdrop-blur-md shadow-lg">
