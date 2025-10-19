@@ -155,7 +155,7 @@ export function Navbar() {
     {
       name: "Home",
       title: "Home",
-      link: "/",
+      link: "#",
       icon: <IconHome className="h-4 w-4 text-white" />,
     },
     {
@@ -173,7 +173,7 @@ export function Navbar() {
     {
       name: "Tech Stack",
       title: "Tech Stack",
-      link: "#tech-stack",
+      link: "#techstack",
       icon: <IconCode className="h-4 w-4 text-white" />,
     },
     {
@@ -192,7 +192,16 @@ export function Navbar() {
 
   return (
     <div className="relative w-full">
-      <FloatingNav navItems={desktopNavItems} className="p-5" />
+      <FloatingNav
+  navItems={[
+    { name: "Home", link: "#home" },
+    { name: "About", link: "#about" },
+    { name: "Services", link: "#services" },
+    { name: "Tech Stack", link: "#techstack" },
+    { name: "Projects", link: "#projects" },
+    { name: "Contact", link: "#contact" },
+  ]}
+/>
     </div>
   );
 }

@@ -1,133 +1,86 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import Head from "./Head";
 
-export function TechStack() {
-  const techStackData = [
+export default function TechStack() {
+  const [hoveredId, setHoveredId] = useState(null);
+
+  const technologies = [
     {
-      title: "TypeScript",
+      id: 1,
+      name: "TypeScript",
       description: "Well experienced in TypeScript for type-safe development",
-      header: "/typescript.webp",
-      alt: "typescript",
-      className: "md:col-span-2",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg",
+      gradient: "from-blue-500 to-cyan-500",
+      bgColor: "bg-blue-50",
+      className: "md:col-span-2" // Large card
     },
     {
-      title: "Git & GitHub",
+      id: 2,
+      name: "Git & GitHub",
       description: "Proficient with version control and collaboration",
-      header: "/git-github.jpg",
-      alt: "git-github",
-      className: "md:col-span-1",
+      logo: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
+      logo2: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+      gradient: "from-orange-500 to-red-500",
+      bgColor: "bg-white",
+      className: "md:col-span-1" // Small card
     },
     {
-      title: "TailwindCSS",
+      id: 3,
+      name: "TailwindCSS",
       description: "Expert in utility-first CSS framework",
-      header: "/tailwind.jpeg",
-      alt: "tailwind",
-      className: "md:col-span-1",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
+      gradient: "from-cyan-500 to-teal-500",
+      bgColor: "bg-white",
+      className: "md:col-span-1" // Small card
     },
-
     {
-      title: "Next.JS",
+      id: 4,
+      name: "Next.js",
       description: "Expert in building fullstack web applications with Next.js",
-      header: "/nextjs.webp",
-      alt: "next",
-      className: "md:col-span-2",
+      logo: "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png",
+      gradient: "from-gray-800 to-gray-900",
+      bgColor: "bg-white",
+      className: "md:col-span-2" // Large card
     },
     {
-      title: "Node.js",
-      description:
-        "Strong expertise in building scalable backend applications and APIs",
-      header: "/node.jpg",
-      alt: "nodejs",
-      className: "md:col-span-3",
+      id: 5,
+      name: "Node.js",
+      description: "Strong expertise in building scalable backend applications and APIs",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg",
+      gradient: "from-green-600 to-green-700",
+      bgColor: "bg-white",
+      className: "md:col-span-3" // Extra large card
+    },
+    {
+      id: 6,
+      name: "React",
+      description: "Building dynamic user interfaces with React",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+      gradient: "from-cyan-400 to-blue-500",
+      bgColor: "bg-gray-900",
+      className: "md:col-span-1" // Small card
+    },
+    {
+      id: 7,
+      name: "Prisma",
+      description: "Modern database toolkit and ORM",
+      logo: "https://cdn.worldvectorlogo.com/logos/prisma-3.svg",
+      gradient: "from-indigo-600 to-purple-600",
+      bgColor: "bg-slate-900",
+      className: "md:col-span-1" // Small card
+    },
+    {
+      id: 8,
+      name: "Docker",
+      description: "Containerization and deployment",
+      logo: "https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png",
+      gradient: "from-blue-600 to-blue-700",
+      bgColor: "bg-white",
+      className: "md:col-span-1" // Small card
     },
   ];
-
-  const TechCard = ({
-    title,
-    description,
-    header,
-    alt,
-    className,
-  }: {
-    title: string;
-    description: string;
-    header: string;
-    alt: string;
-    className?: string;
-  }) => {
-    return (
-      <motion.div
-        id="tech-stack"
-        className={cn(
-          "relative group/bento hover:shadow-xl transition duration-200 shadow-input shadow-none p-4 bg-black border-white/[0.2] border border-transparent justify-between flex flex-col space-y-4 rounded-xl overflow-hidden",
-          className
-        )}
-        whileHover={{
-          scale: 1.02,
-          transition: { duration: 0.2 },
-        }}
-        whileTap={{ scale: 0.98 }}
-      >
-        {/* Animated Border Effect */}
-        <div className="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-0 group-hover/bento:opacity-100 transition-opacity duration-300">
-          <div className="w-full h-full bg-slate-950 rounded-xl" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 p-4 bg-slate-950 rounded-xl h-full flex flex-col">
-          {/* Image Section */}
-          <motion.div
-            className="flex-1 w-full mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center min-h-[140px] relative"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <div className="relative w-full h-full overflow-hidden rounded-md">
-              <Image
-                src={header}
-                alt={alt}
-                fill
-                className="object-cover transition-all duration-500 group-hover/bento:scale-110 group-hover/bento:brightness-110"
-                style={{
-                  filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.4))",
-                }}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-
-              {/* Zoom overlay effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-slate-900/20 rounded-md opacity-0 group-hover/bento:opacity-100 transition-opacity duration-300" />
-
-              {/* Tech icon overlay for better visual hierarchy */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/bento:opacity-100 transition-opacity duration-300">
-                <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 bg-blue-400 rounded-sm opacity-80" />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Text Content */}
-          <motion.div
-            className="flex-shrink-0 space-y-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
-            <h3 className="font-bold text-white text-lg leading-tight tracking-wide group-hover/bento:text-blue-300 transition-colors duration-300">
-              {title}
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed break-words hyphens-auto group-hover/bento:text-slate-200 transition-colors duration-300">
-              {description}
-            </p>
-          </motion.div>
-        </div>
-      </motion.div>
-    );
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -153,50 +106,155 @@ export function TechStack() {
   };
 
   return (
-    <div className="relative w-full py-[100px] flex flex-col justify-center items-center max-md:text-center bg-slate-950">
-      {/* Background Effects */}
-      <motion.div
-        className="absolute size-3/5 w-4/5 border bg-blue_bg -right-[60%] blur-[100px] rounded-full"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+    <section id="techstack" className="relative min-h-screen overflow-hidden bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950">
+      {/* Decorative background elements */}
+      <div className="absolute top-40 left-20 w-64 h-64 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 right-20 w-80 h-80 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
 
-      <div className="max-w-7xl w-full px-4 xl:px-14">
-        <Head heading="My Tech Stack" className="mx-auto" />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
+            <span className="text-indigo-400 text-sm font-semibold tracking-wider uppercase">
+              Technologies
+            </span>
+            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+            My Tech{" "}
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              Stack
+            </span>
+          </h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto">
+            Leveraging modern technologies to build fast, scalable, and maintainable applications.
+          </p>
+        </div>
 
+        {/* Bento Grid - Same Layout Structure */}
         <motion.div
-          className="w-full"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-            {techStackData.map((item, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {technologies.map((tech, index) => (
               <motion.div
-                key={i}
-                className={cn("", item.className)}
+                key={tech.id}
+                className={tech.className}
                 variants={itemVariants}
+                onHoverStart={() => setHoveredId(tech.id)}
+                onHoverEnd={() => setHoveredId(null)}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02,
+                  transition: { duration: 0.3 }
+                }}
               >
-                <TechCard
-                  title={item.title}
-                  description={item.description}
-                  header={item.header}
-                  alt={item.alt}
-                  className="h-full min-h-[260px]"
-                />
+                <div className="relative h-full backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 shadow-xl hover:shadow-2xl group min-h-[280px] flex flex-col">
+                  {/* Animated gradient glow on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 -z-10`}></div>
+                  
+                  {/* Outer glow effect */}
+                  <div className={`absolute -inset-1 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500 -z-20`}></div>
+
+                  {/* Logo Container */}
+                  <div className={`${tech.bgColor} p-8 flex items-center justify-center flex-1 relative overflow-hidden`}>
+                    {/* Animated particles on hover */}
+                    {hoveredId === tech.id && (
+                      <motion.div
+                        className="absolute inset-0"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {[...Array(6)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className={`absolute w-1 h-1 rounded-full bg-gradient-to-r ${tech.gradient}`}
+                            initial={{ 
+                              x: Math.random() * 100 + "%", 
+                              y: Math.random() * 100 + "%",
+                              scale: 0 
+                            }}
+                            animate={{ 
+                              scale: [0, 1, 0],
+                              x: [null, Math.random() * 100 + "%"],
+                              y: [null, Math.random() * 100 + "%"]
+                            }}
+                            transition={{ 
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: i * 0.2 
+                            }}
+                          />
+                        ))}
+                      </motion.div>
+                    )}
+
+                    {/* Logo(s) */}
+                    {tech.logo2 ? (
+                      <div className="flex items-center gap-6 relative z-10">
+                        <motion.img
+                          src={tech.logo}
+                          alt={tech.name}
+                          className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                          whileHover={{ rotate: 5, scale: 1.1 }}
+                        />
+                        <motion.img
+                          src={tech.logo2}
+                          alt={tech.name}
+                          className="w-16 h-16 md:w-20 md:h-20 object-contain"
+                          whileHover={{ rotate: -5, scale: 1.1 }}
+                        />
+                      </div>
+                    ) : (
+                      <motion.img
+                        src={tech.logo}
+                        alt={tech.name}
+                        className="w-20 h-20 md:w-24 md:h-24 object-contain relative z-10"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    )}
+
+                    {/* Corner shine effect */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="p-6 relative z-10 bg-gradient-to-b from-transparent to-slate-900/50">
+                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-indigo-400 group-hover:to-purple-400 transition-all duration-300">
+                      {tech.name}
+                    </h3>
+                    <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                      {tech.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom accent line */}
+                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${tech.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}></div>
+                </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
+
+        {/* Bottom Text */}
+        <motion.div
+          className="text-center mt-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-sm text-gray-500">
+            Constantly learning and exploring new technologies to stay ahead of the curve
+          </p>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }

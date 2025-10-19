@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -15,65 +16,124 @@ export const FloatingNav = ({
 }: {
   navItems: {
     name: string;
-    link: string;
+    link: string; // use #sectionID format for single-page nav
     icon?: JSX.Element;
   }[];
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
-
   const [visible, setVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
+  // --- Show/hide nav on scroll ---
   useMotionValueEvent(scrollYProgress, "change", (current) => {
-    // Check if current is not undefined and is a number
     if (typeof current === "number") {
-      let direction = current! - scrollYProgress.getPrevious()!;
-
+      let direction = current - scrollYProgress.getPrevious()!;
       if (scrollYProgress.get() < 0.05) {
         setVisible(false);
       } else {
-        if (direction < 0) {
-          setVisible(true);
-        } else {
-          setVisible(false);
-        }
+        if (direction < 0) setVisible(true);
+        else setVisible(false);
       }
     }
   });
 
+  // --- Track active section ---
+  useEffect(() => {
+    const sections = document.querySelectorAll("section[id]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 } // triggers when half of a section is visible
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => sections.forEach((section) => observer.unobserve(section));
+  }, []);
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        initial={{
-          opacity: 1,
-          y: -100,
-        }}
+        initial={{ opacity: 1, y: -100 }}
         animate={{
           y: visible ? 0 : -100,
           opacity: visible ? 1 : 0,
         }}
         transition={{
-          duration: 0.2,
+          duration: 0.3,
+          ease: [0.25, 0.46, 0.45, 0.94],
         }}
         className={cn(
-          "flex max-w-fit  fixed top-10 inset-x-0 mx-auto border border-white/[0.2] rounded-xl bg-blue_bg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] pr-2 pl-8 py-2  items-center justify-center space-x-4",
+          "fixed top-6 inset-x-0 mx-auto z-[5000] max-w-fit",
           className
         )}
       >
-        {navItems.map((navItem: any, idx: number) => (
-          <Link
-            key={`link=${idx}`}
-            href={navItem.link}
-            className={cn(
-              "relative text-neutral-50 items-center flex space-x-1  hover:text-neutral-300"
-            )}
-          >
-            <span className="block sm:hidden" title={navItem.title}>
-              {navItem.icon}
-            </span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
-          </Link>
-        ))}
+        {/* Gradient glow */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+
+        {/* Nav container */}
+        <nav className="relative backdrop-blur-2xl bg-slate-900/80 border border-white/10 rounded-2xl px-6 py-3 shadow-2xl">
+          <ul className="flex items-center gap-1">
+            {navItems.map((navItem, idx) => {
+              const sectionId = navItem.link.replace("#", "");
+              const isActive = activeSection === sectionId;
+
+              return (
+                <li key={`link=${idx}`}>
+                  <a
+                    href={navItem.link}
+                    className="relative px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 group block"
+                  >
+                    {/* Active background */}
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeNav"
+                        className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-xl border border-indigo-500/30"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+
+                    {/* Hover effect */}
+                    <span className="absolute inset-0 bg-white/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+
+                    {/* Icon for mobile */}
+                    {navItem.icon && (
+                      <span className="block sm:hidden relative" title={navItem.name}>
+                        {navItem.icon}
+                      </span>
+                    )}
+
+                    {/* Text */}
+                    <span
+                      className={cn(
+                        "hidden sm:block relative transition-colors duration-300",
+                        isActive
+                          ? "text-white"
+                          : "text-gray-400 group-hover:text-white"
+                      )}
+                    >
+                      {navItem.name}
+                    </span>
+
+                    {/* Active indicator dot */}
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeIndicator"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </motion.div>
     </AnimatePresence>
   );

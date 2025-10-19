@@ -1,89 +1,69 @@
 "use client";
+
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import { PinContainer } from "./ui/3d-pin";
-import ThreeDCard from "./ThreeDCard";
-import Head from "./Head";
 
-export function Projects() {
+export default function Projects() {
   const [showAll, setShowAll] = useState(false);
   const projectsRef = useRef<HTMLDivElement>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const projectsData = [
-    // 1. Lydia Esenam (New)
     {
-      src: "/lydiaesenam.png",
-      alt: "Lydia Esenam Personal Brand",
-      title: "Lydia Esenam - Education Consultant",
-      link: "https://lydiaesenam.ca/",
-      desc: "A sophisticated personal branding platform for a leading Canadian education consultant specializing in international student placements. Features client testimonials, service breakdowns, and an integrated booking system, designed with elegant typography and trust-building elements to attract students seeking overseas education guidance.",
-    },
-    // 2. DTM Tech Solutions (Existing, moved to top)
-    {
-      src: "/DTM-Tech-Solutions.png",
-      alt: "DTM Tech Solutions Preview",
-      title: "DTM Tech Solutions",
-      link: "https://dtmtechsolutions.vercel.app/",
-      desc: "A cutting-edge IT consultancy website built with Next.js, featuring dynamic service pages, case studies, and interactive tech demos. Designed for B2B clients, it highlights cybersecurity, cloud solutions, and custom software development with a fast, responsive interface.",
-    },
-    // 3. CloudeSports Tokens (New)
-    {
-      src: "/cloudesports-tokens.png",
-      alt: "CloudeSports Tokens Platform",
-      title: "CloudeSports Fortnite Tokens",
-      link: "https://cloudesports-tokens.vercel.app/",
-      desc: "A competitive gaming-finance platform where Fortnite players wager tokens for real cash prizes. Includes secure payment gateways, live match tracking, and a leaderboard system—all wrapped in a bold, esports-themed UI that appeals to gamers and streamers.",
-    },
-    // 4. Horizon Banking (Existing)
-    {
-      src: "/horizon.jpg",
-      alt: "horizon img",
-      title: "Horizon - Banking System",
-      link: "https://horizon-banking-system-jet.vercel.app/",
-      desc: "A secure online banking platform with real-time transaction tracking, multi-account management, and fraud detection alerts. Built with a focus on UX, offering seamless navigation for both desktop and mobile users.",
-    },
-    // 5. Nokless (New)
-    {
-      src: "/nokless.png",
-      alt: "Nokless Smart Security",
-      title: "Nokless Security SaaS",
-      link: "https://nokless.vercel.app/",
-      desc: "A smart security SaaS landing page showcasing AI-powered visitor monitoring and remote access control. Features include facial recognition, real-time alerts, and smartphone integration—targeting modern homeowners and businesses.",
-    },
-    // 6. Elevate Media (Existing)
-    {
-      src: "/Elevate Media.png",
-      alt: "Elevate Media img",
-      title: "Elevate Media Website",
-      link: "https://elevatemedia-marketing.com/",
-      desc: "A high-performance marketing agency website with smooth animations, case studies, and a lead-generation focus. Designed to convert visitors into clients through persuasive copy and sleek visuals.",
-    },
-    // 7. Kbiz Web Design (Existing)
-    {
-      src: "/kbiz.png",
-      alt: "Kbiz Web Design Img",
-      title: "Kbiz Web Design",
-      link: "https://kbiz.tech",
-      desc: "A portfolio for a web design agency, showcasing services, client work, and testimonials. Built with a minimalist aesthetic to highlight their design expertise.",
-    },
-    // 8. Sudarshan Construction (Existing)
-    {
-      src: "/sudarshan-co.png",
-      alt: "Sudarshan Construction Img",
-      title: "Sudarshan Construction",
-      link: "https://sudarshan-construction.vercel.app/",
-      desc: "A construction company website featuring project galleries, service details, and contact forms. Designed to establish credibility and attract commercial clients.",
-    },
-    // 9. Dave's Portfolio (Existing)
-    {
-      src: "/dave-portfolio.png",
-      alt: "Dave's Portfolio img",
-      title: "Stunning Portfolio",
-      link: "https://david-moses.vercel.app",
-      desc: "A sleek developer portfolio with interactive project showcases, skill breakdowns, and a contact form. Built to impress potential employers and clients.",
-    },
-  ];
+    src: "/pharma.png",
+    alt: "Pharma Medtech Platform",
+    title: "Pharma Medtech",
+    subtitle: "Healthcare Platform",
+    link: "https://pharma-medtech.onrender.com/",
+    desc: "A modern healthcare platform built for medical innovation, featuring real-time collaboration powered by Socket.io and smooth interactions via Framer Motion.",
+    tags: ["Next.js", "Socket.io", "Postgresql"],
+  },
+  {
+    src: "/lydiaesenam.png",
+    alt: "Lydia Esenam Personal Brand",
+    title: "Lydia Esenam",
+    subtitle: "Education Consultant",
+    link: "https://lydiaesenam.ca/",
+    desc: "A sophisticated personal branding platform for a leading Canadian education consultant specializing in international student placements.",
+    tags: ["Next.js", "TypeScript", "Tailwind"],
+  },
+  {
+    src: "/DTM-Tech-Solutions.png",
+    alt: "DTM Tech Solutions Preview",
+    title: "DTM Tech Solutions",
+    subtitle: "IT Consultancy",
+    link: "https://dtmtechsolutions.vercel.app/",
+    desc: "A cutting-edge IT consultancy website built with Next.js, featuring dynamic service pages, case studies, and interactive tech demos.",
+    tags: ["React", "Next.js", "Framer Motion"],
+  },
+  {
+    src: "/cloudesports-tokens.png",
+    alt: "CloudeSports Tokens Platform",
+    title: "CloudeSports Tokens",
+    subtitle: "Gaming Platform",
+    link: "https://cloudesports-tokens.vercel.app/",
+    desc: "A competitive gaming-finance platform where Fortnite players wager tokens for real cash prizes.",
+    tags: ["React", "Next.js", "Framer Motion"],
+  },
+  {
+    src: "/horizon.jpg",
+    alt: "horizon img",
+    title: "Horizon Banking",
+    subtitle: "Banking System",
+    link: "https://horizon-banking-system-jet.vercel.app/",
+    desc: "A secure online banking platform with real-time transaction tracking and multi-account management.",
+    tags: ["React", "Plaid API", "Node.js"],
+  },
+  {
+    src: "/nokless.png",
+    alt: "Nokless Smart Security",
+    title: "Nokless Security",
+    subtitle: "SaaS Platform",
+    link: "https://nokless.vercel.app/",
+    desc: "A smart security SaaS landing page showcasing AI-powered visitor monitoring and remote access control.",
+    tags: ["React", "Next.js", "Framer Motion"],
+  },
+];
 
   const displayedProjects = showAll ? projectsData : projectsData.slice(0, 3);
 
@@ -91,7 +71,6 @@ export function Projects() {
     setIsTransitioning(true);
 
     if (showAll) {
-      // When collapsing, wait for animation to start then scroll
       setTimeout(() => {
         projectsRef.current?.scrollIntoView({
           behavior: "smooth",
@@ -102,38 +81,31 @@ export function Projects() {
 
     setShowAll(!showAll);
 
-    // Reset transition state after animation completes (increased time)
     setTimeout(() => {
       setIsTransitioning(false);
     }, 1800);
   };
 
   const containerVariants = {
-    hidden: {
-      opacity: 0,
-    },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         duration: 0.8,
-        staggerChildren: 0.2,
+        staggerChildren: 0.15,
         delayChildren: 0.2,
       },
     },
   };
 
   const itemVariants = {
-    hidden: {
-      y: 60,
-      opacity: 0,
-      scale: 0.9,
-    },
+    hidden: { y: 60, opacity: 0, scale: 0.9 },
     visible: {
       y: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 1.0,
+        duration: 0.8,
         ease: [0.22, 1, 0.36, 1],
       },
     },
@@ -142,7 +114,7 @@ export function Projects() {
       opacity: 0,
       scale: 0.9,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         ease: [0.22, 1, 0.36, 1],
       },
     },
@@ -151,59 +123,121 @@ export function Projects() {
   return (
     <section
       ref={projectsRef}
-      className="relative w-full py-[100px] flex flex-col justify-center items-center max-md:text-center bg-slate-950 mx-auto overflow-x-hidden"
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950"
       id="projects"
     >
-      <div className="absolute size-3/5 w-4/5 border bg-blue_bg -right-[60%] blur-[100px] rounded-full" />
-      <div className="absolute size-3/5 w-4/5 border bg-blue_bg -left-[60%] blur-[100px] rounded-full" />
+      {/* Decorative background elements */}
+      <div className="absolute top-40 right-20 w-64 h-64 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 left-20 w-80 h-80 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-full blur-3xl"></div>
 
-      <Head heading="Some Latest Projects" className="mx-auto" />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
+            <span className="text-indigo-400 text-sm font-semibold tracking-wider uppercase">
+              Projects
+            </span>
+            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+            Some Latest{" "}
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              Projects
+            </span>
+          </h2>
+          <p className="text-base text-gray-400 max-w-2xl mx-auto">
+            Crafting digital experiences that drive results and delight users across industries.
+          </p>
+        </div>
 
-      <div className="max-w-7xl flex flex-col mx-auto justify-center w-full px-4 xl:px-14 pt-10">
+        {/* Projects Grid */}
         <LayoutGroup>
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full justify-items-center"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             layout
-            transition={{
-              layout: {
-                duration: 1.2,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
           >
             <AnimatePresence mode="sync">
-              {displayedProjects.map((item, index) => (
+              {displayedProjects.map((project, index) => (
                 <motion.div
-                  key={item.title}
-                  className="w-full max-w-[380px]"
+                  key={project.title}
                   variants={itemVariants}
                   layout
-                  layoutId={`project-${item.title}`}
+                  layoutId={`project-${project.title}`}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  transition={{
-                    layout: {
-                      duration: 1.2,
-                      ease: [0.22, 1, 0.36, 1],
-                    },
-                  }}
+                  className="group"
                 >
-                  <PinContainer
-                    link={item.link}
-                    containerClassName="w-full h-[450px]"
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
                   >
-                    <ThreeDCard
-                      src={item.src}
-                      alt={item.alt}
-                      title={item.title}
-                      desc={item.desc}
-                    />
-                  </PinContainer>
+                    <motion.div
+                      whileHover={{ y: -12 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative h-full backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 shadow-xl hover:shadow-2xl"
+                    >
+                      {/* Gradient glow on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                      {/* Image Container */}
+                      <div className="relative h-56 overflow-hidden bg-slate-800">
+                        <img
+                          src={project.src}
+                          alt={project.alt}
+                          className="w-full h-full object-top transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+                        
+                        {/* Overlay icon */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6 relative z-10">
+                        <div className="mb-3">
+                          <h3 className="text-xl font-bold text-white mb-1 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-indigo-400 group-hover:to-purple-400 transition-all duration-300">
+                            {project.title}
+                          </h3>
+                          <p className="text-sm text-indigo-400 font-medium">
+                            {project.subtitle}
+                          </p>
+                        </div>
+
+                        <p className="text-sm text-gray-400 leading-relaxed mb-4 line-clamp-3 group-hover:text-gray-300 transition-colors">
+                          {project.desc}
+                        </p>
+
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="px-3 py-1 text-xs font-medium bg-white/5 border border-white/10 rounded-full text-gray-300 group-hover:bg-white/10 transition-colors"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Bottom accent */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                    </motion.div>
+                  </a>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -212,64 +246,31 @@ export function Projects() {
 
         {/* Show More/Less Button */}
         <motion.div
-          className="flex justify-center mt-12"
+          className="flex justify-center mt-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 1.0, duration: 0.8 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
         >
           <motion.button
             onClick={handleToggle}
             disabled={isTransitioning}
-            className={`px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-blue-500/25 transition-all duration-300 flex items-center gap-2 relative overflow-hidden ${
+            className={`px-8 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-indigo-500/40 transition-all duration-300 flex items-center gap-2 ${
               isTransitioning ? "opacity-75 cursor-not-allowed" : ""
             }`}
-            whileHover={
-              !isTransitioning
-                ? {
-                    scale: 1.05,
-                    boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)",
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-            whileTap={
-              !isTransitioning
-                ? {
-                    scale: 0.95,
-                    transition: { duration: 0.1 },
-                  }
-                : {}
-            }
-            layout
+            whileHover={!isTransitioning ? { scale: 1.05 } : {}}
+            whileTap={!isTransitioning ? { scale: 0.95 } : {}}
           >
-            {/* Background animation */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-500 opacity-0"
-              whileHover={!isTransitioning ? { opacity: 1 } : {}}
-              transition={{ duration: 0.3 }}
-            />
-
-            <motion.span
-              className="relative z-10"
-              layout
-              transition={{ duration: 0.4 }}
-            >
-              {showAll ? "Show Less" : "Show More Projects"}
-            </motion.span>
-
+            <span>{showAll ? "Show Less" : "Show More Projects"}</span>
             <motion.svg
-              className="w-5 h-5 relative z-10"
+              className="w-5 h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
               animate={{
                 rotate: showAll ? 180 : 0,
-                transition: {
-                  duration: 0.8,
-                  ease: [0.22, 1, 0.36, 1],
-                },
               }}
+              transition={{ duration: 0.3 }}
             >
               <path
                 strokeLinecap="round"
