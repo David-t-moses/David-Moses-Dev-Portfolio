@@ -15,7 +15,7 @@ export default function About() {
       title: "My Approach",
       subtitle: "The Foundation",
       description:
-        "I build with intention — balancing design aesthetics with technical precision. Each line of code serves the goal of creating seamless, human-centered digital experiences that connect emotionally and perform beautifully.",
+        "I build with intention, balancing design aesthetics with technical precision. Each line of code serves the goal of creating seamless, human-centered digital experiences that connect emotionally and perform beautifully.",
       emoji: "⚡",
       color: "indigo",
       gradient: "from-indigo-500 to-purple-500",
@@ -32,7 +32,7 @@ export default function About() {
       title: "How I Work",
       subtitle: "The Process",
       description:
-        "Every project begins with understanding your goals. Through clear communication and iteration, I move from discovery to deployment with precision — ensuring your website looks great, performs fast, and scales effortlessly.",
+        "Every project begins with understanding your goals. Through clear communication and iteration, I move from discovery to deployment with precision; ensuring your website looks great, performs fast, and scales effortlessly.",
       emoji: "🎯",
       color: "cyan",
       gradient: "from-cyan-500 to-blue-500",
@@ -51,7 +51,7 @@ export default function About() {
       title: "Real Results",
       subtitle: "The Outcome",
       description:
-        "Your success defines mine. Every site I deliver is optimized for performance, accessibility, and conversion — designed not just to look good, but to grow your business and make an impact.",
+        "Your success defines mine. Every site I deliver is optimized for performance, accessibility, and conversion - designed not just to look good, but to grow your business and make an impact.",
       emoji: "✨",
       color: "purple",
       gradient: "from-purple-500 to-pink-500",
@@ -230,31 +230,78 @@ export default function About() {
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.div
-          className="text-center mt-40"
+        {/* --- ABOUT SYSTEM CTA --- */}
+        <motion.div 
+          className="mt-40 relative group"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <div className="inline-block backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-10">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Build Something Great Together?
-            </h3>
-            <p className="text-gray-400 mb-8 max-w-md mx-auto text-base md:text-lg">
-              Let's collaborate to bring your ideas to life — with clean design,
-              solid code, and results that last.
-            </p>
-            <Link href="/#contact">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-indigo-500/40 transition-all"
-            >
-              Get In Touch →
-            </motion.button>
-            </Link>
+          {/* Outer Glow Effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition duration-700"></div>
+          
+          <div className="relative overflow-hidden rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-xl">
+            {/* Animated Background Gradient Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(99,102,241,0.1),transparent)]" />
+
+            <div className="relative p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-10">
+              
+              <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                {/* Visual Icon Node */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full animate-pulse"></div>
+                  <div className="relative h-20 w-20 rounded-2xl bg-slate-950 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                    <svg 
+                      className="w-10 h-10" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="max-w-md">
+                  <h4 className="text-2xl font-bold text-white mb-2 tracking-tight">
+                    Establish <span className="text-indigo-400 italic">Partnership?</span>
+                  </h4>
+                  <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+                    I’m currently reviewing new project inquiries for 2024. Let’s determine if our technical goals align.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                <Link 
+                  href="#contact" 
+                  className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95"
+                >
+                  Initiate Discussion
+                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-ping" />
+                </Link>
+                
+                <a 
+                  href="https://calendly.com/davidtmoses5/30min" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-center"
+                >
+                  View Availability
+                </a>
+              </div>
+
+            </div>
+
+            {/* Subtle Industrial Detail */}
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
           </div>
         </motion.div>
       </div>

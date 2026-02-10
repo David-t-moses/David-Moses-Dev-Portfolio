@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     siteName: "David Moses Portfolio",
     images: [
       {
-        url: "/logo-2.png", // You'll need to create this image (1200x630px)
+        url: "/logo-bg.jpg", // You'll need to create this image (1200x630px)
         width: 1200,
         height: 630,
         alt: "David Moses - Full Stack Web Developer",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     title: "David Moses | Full Stack Web Developer",
     description:
       "Professional Full Stack Web Developer creating innovative digital solutions with React, Next.js, and modern web technologies.",
-    images: ["/logo-2.png"], // Same image as OpenGraph
+    images: ["/logo-bg.jpg"], // Same image as OpenGraph
     creator: "@David_t_moses", // Replace with your actual Twitter handle
   },
   robots: {
@@ -86,14 +86,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logo-2.png", sizes: "16x16", type: "image/png" },
-      { url: "/logo-2.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo-bg.jpg", sizes: "16x16", type: "image/png" },
+      { url: "/logo-bg.jpg", sizes: "32x32", type: "image/png" },
     ],
-    apple: [{ url: "/logo-2.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/logo-bg.jpg", sizes: "180x180", type: "image/png" }],
     other: [
       {
         rel: "mask-icon",
-        url: "/logo-2.png",
+        url: "/logo-bg.jpg",
         color: "#3b82f6",
       },
     ],

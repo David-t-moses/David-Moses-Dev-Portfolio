@@ -246,18 +246,19 @@ export default function Hero() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/#projects">
-            <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105">
-              View My Work
-            </button>
-            </Link>
-            <Link href="https://calendly.com/davidtmoses5/30min" target='_blank'>
-            <button className="px-8 py-4 backdrop-blur-xl bg-white/5 text-white font-semibold rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105">
-              Book a call
-            </button>
-            </Link>
-          </div>
+<div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md mx-auto sm:max-w-none">
+  <Link href="/#projects" className="w-full sm:w-auto">
+    <button className="w-full px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 active:scale-95">
+      View My Work
+    </button>
+  </Link>
+  
+  <Link href="https://calendly.com/davidtmoses5/30min" target='_blank' className="w-full sm:w-auto">
+    <button className="w-full px-8 py-4 backdrop-blur-xl bg-white/5 text-white font-semibold rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 hover:scale-105 active:scale-95">
+      Book a call
+    </button>
+  </Link>
+</div>
         </div>
 
         {/* Floating Code Editor - Centered */}

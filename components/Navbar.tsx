@@ -15,24 +15,34 @@ export function Navbar() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false); // Track scroll state
 
   useEffect(() => {
     setMounted(true);
+    
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
+    const handleScroll = () => {
+      // Trigger background change after 20px scroll
+      setScrolled(window.scrollY > 20);
+    };
+
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
+    window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("resize", checkScreenSize);
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleNavClick = (link: string) => {
     setIsMenuOpen(false);
-
     if (link === "/") {
-      window.location.href = "/";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       const element = document.querySelector(link);
       if (element) {
@@ -41,28 +51,41 @@ export function Navbar() {
     }
   };
 
-  // Don't render anything until mounted to avoid hydration issues
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   if (isMobile) {
     const mobileNavItems = [
       { name: "Home", title: "Home", link: "/" },
       { name: "About", title: "About Me", link: "#about" },
       { name: "Services", title: "My Services", link: "#services" },
-      { name: "Tech Stack", title: "Technologies", link: "#tech-stack" },
+      { name: "Tech Stack", title: "Technologies", link: "#techstack" },
       { name: "Projects", title: "My Projects", link: "#projects" },
       { name: "Contact", title: "Contact Me", link: "#contact" },
     ];
 
     return (
       <>
-        {/* Mobile Menu Button */}
-        <div className="fixed top-4 right-4 z-[9999] md:hidden">
+        {/* Top Header Bar for Mobile */}
+        <div 
+          className={`fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between px-6 py-4 md:hidden transition-all duration-300 ${
+            scrolled 
+              ? "bg-slate-950/80 backdrop-blur-lg border-b border-white/5 py-3" 
+              : "bg-transparent py-5"
+          }`}
+        >
+          {/* Logo on the Left */}
+          <div className="flex items-center cursor-pointer" onClick={() => handleNavClick("/")}>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className={`h-8 w-auto object-contain transition-transform duration-300 ${scrolled ? "scale-90" : "scale-100"}`} 
+            />
+          </div>
+
+          {/* Hamburger Menu on the Right */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-3 bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-600 text-white hover:bg-slate-800 transition-all duration-200 shadow-lg"
+            className="p-2.5 bg-slate-900/90 backdrop-blur-md rounded-xl border border-white/10 text-white hover:bg-slate-800 transition-all duration-200"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
@@ -75,133 +98,47 @@ export function Navbar() {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="fixed inset-0 z-[9998] bg-slate-950/98 backdrop-blur-md md:hidden">
-            {/* Scrollable Container */}
+          <div className="fixed inset-0 z-[9998] bg-slate-950/98 backdrop-blur-xl md:hidden animate-in fade-in duration-300">
             <div className="mobile-nav-scroll h-full overflow-y-auto">
-              <div className="flex flex-col items-center justify-start min-h-full py-20 px-8 space-y-6">
+              <div className="flex flex-col items-center justify-start min-h-full py-28 px-8 space-y-4">
                 {mobileNavItems.map((item, index) => (
                   <button
                     key={`mobile-nav-${index}`}
                     onClick={() => handleNavClick(item.link)}
-                    className="flex flex-col items-center space-y-3 p-6 rounded-xl hover:bg-slate-800/60 transition-all duration-200 group w-full max-w-xs border border-slate-700/50 hover:border-slate-600 flex-shrink-0"
+                    className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-indigo-500/50 transition-all duration-300 w-full group"
                   >
-                    <div className="p-4 bg-slate-800/70 rounded-full group-hover:bg-slate-700/80 transition-all duration-200 group-hover:scale-110">
-                      {item.name === "Home" && (
-                        <IconHome className="h-7 w-7 text-white" />
-                      )}
-                      {item.name === "About" && (
-                        <IconUser className="h-7 w-7 text-white" />
-                      )}
-                      {item.name === "Services" && (
-                        <IconBriefcase className="h-7 w-7 text-white" />
-                      )}
-                      {item.name === "Tech Stack" && (
-                        <IconCode className="h-7 w-7 text-white" />
-                      )}
-                      {item.name === "Projects" && (
-                        <IconBriefcase className="h-7 w-7 text-white" />
-                      )}
-                      {item.name === "Contact" && (
-                        <IconAddressBook className="h-7 w-7 text-white" />
-                      )}
+                    <div className="p-3 bg-slate-800 rounded-xl group-hover:bg-indigo-600 transition-colors">
+                        {item.name === "Home" && <IconHome size={20} />}
+                        {item.name === "About" && <IconUser size={20} />}
+                        {item.name === "Services" && <IconBriefcase size={20} />}
+                        {item.name === "Tech Stack" && <IconCode size={20} />}
+                        {item.name === "Projects" && <IconBriefcase size={20} />}
+                        {item.name === "Contact" && <IconAddressBook size={20} />}
                     </div>
-                    <span className="text-white text-lg font-medium group-hover:text-blue-300 transition-colors duration-200">
-                      {item.title}
-                    </span>
+                    <span className="text-white font-medium text-lg">{item.title}</span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
         )}
-
-        {/* Bottom Navigation Bar for Mobile */}
-        {/* <div className="fixed bottom-0 left-0 right-0 z-[9997] bg-slate-900/95 backdrop-blur-md border-t border-slate-700 md:hidden">
-          <div className="flex justify-around items-center py-3 px-2">
-            {mobileNavItems.slice(0, 5).map((item, index) => (
-              <button
-                key={`bottom-nav-${index}`}
-                onClick={() => handleNavClick(item.link)}
-                className="flex flex-col items-center space-y-1 p-2 rounded-lg hover:bg-slate-800/50 transition-all duration-200 min-w-0 flex-1"
-              >
-                {item.name === "Home" && (
-                  <IconHome className="h-5 w-5 text-white" />
-                )}
-                {item.name === "About" && (
-                  <IconUser className="h-5 w-5 text-white" />
-                )}
-                {item.name === "Services" && (
-                  <IconBriefcase className="h-5 w-5 text-white" />
-                )}
-                {item.name === "Tech Stack" && (
-                  <IconCode className="h-5 w-5 text-white" />
-                )}
-                {item.name === "Projects" && (
-                  <IconBriefcase className="h-5 w-5 text-white" />
-                )}
-                <span className="text-white text-xs font-medium truncate">
-                  {item.name}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div> */}
       </>
     );
   }
 
-  // Desktop navigation - keep it simple
-  const desktopNavItems = [
-    {
-      name: "Home",
-      title: "Home",
-      link: "#",
-      icon: <IconHome className="h-4 w-4 text-white" />,
-    },
-    {
-      name: "About",
-      title: "About",
-      link: "#about",
-      icon: <IconUser className="h-4 w-4 text-white" />,
-    },
-    {
-      name: "Services",
-      title: "Services",
-      link: "#services",
-      icon: <IconBriefcase className="h-4 w-4 text-white" />,
-    },
-    {
-      name: "Tech Stack",
-      title: "Tech Stack",
-      link: "#techstack",
-      icon: <IconCode className="h-4 w-4 text-white" />,
-    },
-    {
-      name: "Projects",
-      title: "Projects",
-      link: "#projects",
-      icon: <IconBriefcase className="h-4 w-4 text-white" />,
-    },
-    {
-      name: "Contact",
-      title: "Contact",
-      link: "#contact",
-      icon: <IconAddressBook className="h-4 w-4 text-white" />,
-    },
-  ];
-
+  // Desktop Navigation
   return (
     <div className="relative w-full">
       <FloatingNav
-  navItems={[
-    { name: "Home", link: "#home" },
-    { name: "About", link: "#about" },
-    { name: "Services", link: "#services" },
-    { name: "Tech Stack", link: "#techstack" },
-    { name: "Projects", link: "#projects" },
-    { name: "Contact", link: "#contact" },
-  ]}
-/>
+        navItems={[
+          { name: "Home", link: "#home" },
+          { name: "About", link: "#about" },
+          { name: "Services", link: "#services" },
+          { name: "Tech Stack", link: "#techstack" },
+          { name: "Projects", link: "#projects" },
+          { name: "Contact", link: "#contact" },
+        ]}
+      />
     </div>
   );
 }

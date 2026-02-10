@@ -1,259 +1,198 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { Terminal, ArrowRight, Code2, Cpu, Globe, Smartphone, ShoppingBag, Palette, Zap } from "lucide-react";
+import Link from "next/link";
 
-export default function TechStack() {
-  const [hoveredId, setHoveredId] = useState(null);
+const technologies = [
+  {
+    id: 1,
+    title: "Next.js & React",
+    description: "Expertise in building high-performance full-stack applications with SSR and ISR.",
+    icon: <Code2 />,
+    gradient: "from-zinc-400 to-zinc-600",
+    colSpan: "md:col-span-2",
+    level: "98%"
+  },
+  {
+    id: 2,
+    title: "TypeScript",
+    description: "Enforcing type-safety for scalable and maintainable enterprise codebases.",
+    icon: <Cpu />,
+    gradient: "from-blue-500 to-indigo-500",
+    colSpan: "md:col-span-1",
+    level: "92%"
+  },
+  {
+    id: 3,
+    title: "React Native",
+    description: "Developing seamless cross-platform mobile experiences for iOS and Android.",
+    icon: <Smartphone />,
+    gradient: "from-cyan-400 to-blue-500",
+    colSpan: "md:col-span-1",
+    level: "88%"
+  },
+  {
+    id: 4,
+    title: "Node.js & Backend",
+    description: "Architecting robust APIs and server-side logic using modern runtime environments.",
+    icon: <Globe />,
+    gradient: "from-green-500 to-emerald-600",
+    colSpan: "md:col-span-2",
+    level: "90%"
+  },
+  {
+    id: 5,
+    title: "E-commerce Ecosystems",
+    description: "Specialized in Shopify and WordPress/WooCommerce for high-conversion retail.",
+    icon: <ShoppingBag />,
+    gradient: "from-purple-500 to-pink-500",
+    colSpan: "md:col-span-1",
+    level: "95%"
+  },
+  {
+    id: 6,
+    title: "Design & CMS",
+    description: "Bridging the gap between Figma designs and live Webflow deployments.",
+    icon: <Palette />,
+    gradient: "from-orange-500 to-red-500",
+    colSpan: "md:col-span-2",
+    level: "90%"
+  },
+];
 
-  const technologies = [
-    {
-      id: 1,
-      name: "TypeScript",
-      description: "Well experienced in TypeScript for type-safe development",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg",
-      gradient: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-50",
-      className: "md:col-span-2" // Large card
-    },
-    {
-      id: 2,
-      name: "Git & GitHub",
-      description: "Proficient with version control and collaboration",
-      logo: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
-      logo2: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-      gradient: "from-orange-500 to-red-500",
-      bgColor: "bg-white",
-      className: "md:col-span-1" // Small card
-    },
-    {
-      id: 3,
-      name: "TailwindCSS",
-      description: "Expert in utility-first CSS framework",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
-      gradient: "from-cyan-500 to-teal-500",
-      bgColor: "bg-white",
-      className: "md:col-span-1" // Small card
-    },
-    {
-      id: 4,
-      name: "Next.js",
-      description: "Expert in building fullstack web applications with Next.js",
-      logo: "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png",
-      gradient: "from-gray-800 to-gray-900",
-      bgColor: "bg-white",
-      className: "md:col-span-2" // Large card
-    },
-    {
-      id: 5,
-      name: "Node.js",
-      description: "Strong expertise in building scalable backend applications and APIs",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg",
-      gradient: "from-green-600 to-green-700",
-      bgColor: "bg-white",
-      className: "md:col-span-3" // Extra large card
-    },
-    {
-      id: 6,
-      name: "React",
-      description: "Building dynamic user interfaces with React",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
-      gradient: "from-cyan-400 to-blue-500",
-      bgColor: "bg-gray-900",
-      className: "md:col-span-1" // Small card
-    },
-    {
-      id: 7,
-      name: "Prisma",
-      description: "Modern database toolkit and ORM",
-      logo: "https://cdn.worldvectorlogo.com/logos/prisma-3.svg",
-      gradient: "from-indigo-600 to-purple-600",
-      bgColor: "bg-slate-900",
-      className: "md:col-span-1" // Small card
-    },
-    {
-      id: 8,
-      name: "Docker",
-      description: "Containerization and deployment",
-      logo: "https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png",
-      gradient: "from-blue-600 to-blue-700",
-      bgColor: "bg-white",
-      className: "md:col-span-1" // Small card
-    },
-  ];
+function TechCard({ tech }: { tech: (typeof technologies)[0] }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      },
-    },
-  };
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
 
   return (
-    <section id="techstack" className="relative min-h-screen overflow-hidden bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950">
-      {/* Decorative background elements */}
-      <div className="absolute top-40 left-20 w-64 h-64 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-40 right-20 w-80 h-80 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
+    <motion.div
+      onMouseMove={handleMouseMove}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/40 backdrop-blur-sm p-8 transition-all duration-500 hover:border-white/20 ${tech.colSpan}`}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              450px circle at ${mouseX}px ${mouseY}px,
+              rgba(255, 255, 255, 0.05),
+              transparent 80%
+            )
+          `,
+        }}
+      />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
-            <span className="text-indigo-400 text-sm font-semibold tracking-wider uppercase">
-              Technologies
-            </span>
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
+      <div className="relative z-10 flex h-full flex-col justify-between">
+        <div>
+          <div className={`mb-6 inline-flex rounded-2xl bg-gradient-to-br ${tech.gradient} p-0.5 shadow-lg`}>
+            <div className="flex rounded-[14px] bg-slate-950 p-3 text-white">
+              {React.cloneElement(tech.icon as React.ReactElement, { size: 24 })}
+            </div>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            My Tech{" "}
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Stack
-            </span>
-          </h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto">
-            Leveraging modern technologies to build fast, scalable, and maintainable applications.
+
+          <h3 className="mb-3 text-2xl font-bold text-white tracking-tight">
+            {tech.title}
+          </h3>
+          <p className="max-w-[320px] text-sm leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors">
+            {tech.description}
           </p>
         </div>
 
-        {/* Bento Grid - Same Layout Structure */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {technologies.map((tech, index) => (
-              <motion.div
-                key={tech.id}
-                className={tech.className}
-                variants={itemVariants}
-                onHoverStart={() => setHoveredId(tech.id)}
-                onHoverEnd={() => setHoveredId(null)}
-                whileHover={{ 
-                  y: -8, 
-                  scale: 1.02,
-                  transition: { duration: 0.3 }
-                }}
-              >
-                <div className="relative h-full backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 shadow-xl hover:shadow-2xl group min-h-[280px] flex flex-col">
-                  {/* Animated gradient glow on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 -z-10`}></div>
-                  
-                  {/* Outer glow effect */}
-                  <div className={`absolute -inset-1 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500 -z-20`}></div>
-
-                  {/* Logo Container */}
-                  <div className={`${tech.bgColor} p-8 flex items-center justify-center flex-1 relative overflow-hidden`}>
-                    {/* Animated particles on hover */}
-                    {hoveredId === tech.id && (
-                      <motion.div
-                        className="absolute inset-0"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        {[...Array(6)].map((_, i) => (
-                          <motion.div
-                            key={i}
-                            className={`absolute w-1 h-1 rounded-full bg-gradient-to-r ${tech.gradient}`}
-                            initial={{ 
-                              x: Math.random() * 100 + "%", 
-                              y: Math.random() * 100 + "%",
-                              scale: 0 
-                            }}
-                            animate={{ 
-                              scale: [0, 1, 0],
-                              x: [null, Math.random() * 100 + "%"],
-                              y: [null, Math.random() * 100 + "%"]
-                            }}
-                            transition={{ 
-                              duration: 2,
-                              repeat: Infinity,
-                              delay: i * 0.2 
-                            }}
-                          />
-                        ))}
-                      </motion.div>
-                    )}
-
-                    {/* Logo(s) */}
-                    {tech.logo2 ? (
-                      <div className="flex items-center gap-6 relative z-10">
-                        <motion.img
-                          src={tech.logo}
-                          alt={tech.name}
-                          className="w-16 h-16 md:w-20 md:h-20 object-contain"
-                          whileHover={{ rotate: 5, scale: 1.1 }}
-                        />
-                        <motion.img
-                          src={tech.logo2}
-                          alt={tech.name}
-                          className="w-16 h-16 md:w-20 md:h-20 object-contain"
-                          whileHover={{ rotate: -5, scale: 1.1 }}
-                        />
-                      </div>
-                    ) : (
-                      <motion.img
-                        src={tech.logo}
-                        alt={tech.name}
-                        className="w-20 h-20 md:w-24 md:h-24 object-contain relative z-10"
-                        whileHover={{ rotate: 360, scale: 1.1 }}
-                        transition={{ duration: 0.6 }}
-                      />
-                    )}
-
-                    {/* Corner shine effect */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-
-                  {/* Text Content */}
-                  <div className="p-6 relative z-10 bg-gradient-to-b from-transparent to-slate-900/50">
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-indigo-400 group-hover:to-purple-400 transition-all duration-300">
-                      {tech.name}
-                    </h3>
-                    <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                      {tech.description}
-                    </p>
-                  </div>
-
-                  {/* Bottom accent line */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${tech.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}></div>
-                </div>
-              </motion.div>
-            ))}
+        <div className="mt-8 flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
+              Proficiency_Level
+            </span>
+            <span className="text-white font-bold text-sm">{tech.level}</span>
           </div>
-        </motion.div>
+          <div className={`h-1 w-12 rounded-full bg-gradient-to-r ${tech.gradient} opacity-50 group-hover:w-24 group-hover:opacity-100 transition-all duration-700`}></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
-        {/* Bottom Text */}
-        <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-sm text-gray-500">
-            Constantly learning and exploring new technologies to stay ahead of the curve
+export default function TechStack() {
+  return (
+    <section className="relative min-h-screen overflow-hidden bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 px-6 py-32" id="techstack">
+      {/* Background Glows */}
+      <div className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-purple-500/5 blur-[120px] pointer-events-none" />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* Centered Header Section */}
+        <div className="mb-24 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5"
+          >
+            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+            <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-indigo-400">
+              Engine Room // Infrastructure
+            </span>
+          </motion.div>
+          
+          <h2 className="text-4xl font-bold text-white md:text-6xl tracking-tighter mb-6 leading-none">
+            Tech Stack & <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent italic">Core Tools.</span>
+          </h2>
+          
+          <p className="text-slate-400 max-w-2xl mx-auto text-base leading-relaxed">
+            I leverage a specialized selection of modern frameworks and platforms to engineer high-performance digital solutions that scale with your business.
           </p>
-        </motion.div>
+        </div>
+
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {technologies.map((tech) => (
+            <TechCard key={tech.id} tech={tech} />
+          ))}
+        </div>
+
+       {/* --- NEW TECH CTA --- */}
+        <div className="mt-20 relative rounded-2xl overflow-hidden">
+          <div className="absolute inset-0 bg-indigo-600/5 backdrop-blur-3xl border border-white/5 rounded-2xl"></div>
+          
+          <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-6">
+              <div className="h-16 w-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+                <Cpu className="animate-pulse" size={32} />
+              </div>
+              <div>
+                <h4 className="text-xl font-bold text-white mb-1">Custom Architecture Needed?</h4>
+                <p className="text-slate-400 text-sm">I can adapt to your specific enterprise stack or legacy system requirements.</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              <a 
+                href="#contact" 
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-xl font-bold transition-all"
+              >
+                Start Build
+                <Zap size={16} fill="currentColor" />
+              </a>
+              {/* <a 
+                href="https://github.com" 
+                target="_blank"
+                className="p-4 rounded-xl border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <ExternalLink size={20} />
+              </a> */}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
