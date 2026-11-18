@@ -191,7 +191,7 @@ function MarqueeCard({ project, onOpen, dup }: { project: Project; onOpen: OnOpe
           style={{ aspectRatio: "3 / 2" }}
           className="relative block w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/15 bg-slate-950 transition-transform duration-500 ease-out group-hover/t:scale-[1.015] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-indigo-300"
         >
-          <Image src={project.src} alt="" fill loading="eager" sizes="(min-width: 768px) 360px, 240px" quality={80} className="object-cover object-top" />
+          <Image src={project.src} alt="" fill draggable={false} loading="eager" sizes="(min-width: 768px) 360px, 240px" quality={80} className="object-cover object-top" />
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_40%)]" />
           <span aria-hidden="true" className="pointer-events-none absolute bottom-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/75 text-white/85 ring-1 ring-white/15">
             <Maximize2 size={12} />
@@ -228,11 +228,158 @@ function Group({ list, onOpen, hidden }: { list: Project[]; onOpen: OnOpen; hidd
   );
 }
 
+/**
+ * One moving row. It drifts slowly by itself (the same speed as before) and can also be dragged or swiped
+ * in either direction with a little momentum. It loops with no end: the content is two identical groups
+ * and the position wraps by exactly one group. Transform only; the loop runs only while the row is on screen.
+ */
 function Row({ list, onOpen, reverse, seconds }: { list: Project[]; onOpen: OnOpen; reverse?: boolean; seconds: number }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const track = trackRef.current;
+    if (!wrap || !track) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // static layout instead
+
+    const dir = reverse ? -1 : 1;
+    let x = 0; // distance travelled along the row, in px
+    let v = 0; // momentum from a swipe, px per second
+    let drift = 0; // eased auto drift, px per second
+    let last = performance.now();
+    let raf = 0;
+    let visible = false;
+    let hover = false;
+    let focus = false;
+    let pid = -1;
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startPos = 0;
+    let lastX = 0;
+    let lastT = 0;
+
+    const half = () => track.scrollWidth / 2;
+    const apply = () => {
+      const h = half();
+      if (h > 0) x = ((x % h) + h) % h;
+      track.style.transform = `translate3d(${-x}px,0,0)`;
+    };
+
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (!dragging) {
+        const paused = hover || focus || !!wrap.closest('[data-preview="open"]');
+        const target = paused ? 0 : (dir * half()) / seconds;
+        drift += (target - drift) * Math.min(1, dt * 6);
+        x += (drift + v) * dt;
+        v *= Math.exp(-dt * 3);
+        if (Math.abs(v) < 3) v = 0;
+      }
+      apply();
+      raf = requestAnimationFrame(tick);
+    };
+    const run = () => {
+      const should = visible && !document.hidden;
+      if (should && !raf) {
+        last = performance.now();
+        raf = requestAnimationFrame(tick);
+      } else if (!should && raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); }, { rootMargin: "80px" });
+    io.observe(wrap);
+    document.addEventListener("visibilitychange", run);
+
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      pid = e.pointerId;
+      startX = lastX = e.clientX;
+      startPos = x;
+      lastT = performance.now();
+      moved = false;
+      v = 0;
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerId !== pid) return;
+      const dx = e.clientX - startX;
+      if (!dragging && Math.abs(dx) > 6) {
+        dragging = true;
+        moved = true;
+        try { wrap.setPointerCapture(pid); } catch { /* ignore */ }
+        wrap.dataset.drag = "true";
+      }
+      if (dragging) {
+        x = startPos - dx;
+        const now = performance.now();
+        const dtm = (now - lastT) / 1000;
+        if (dtm > 0) v = 0.6 * v + 0.4 * (-(e.clientX - lastX) / dtm);
+        lastX = e.clientX;
+        lastT = now;
+        apply();
+      }
+    };
+    const onUp = (e: PointerEvent) => {
+      if (e.pointerId !== pid) return;
+      pid = -1;
+      if (dragging) {
+        dragging = false;
+        delete wrap.dataset.drag;
+        v = Math.max(-3500, Math.min(3500, v));
+        if (performance.now() - lastT > 90) v = 0; // held still before letting go
+        drift = 0;
+      }
+    };
+    const onClick = (e: MouseEvent) => {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); x += e.deltaX; v = 0; apply(); }
+    };
+    const onEnter = (e: PointerEvent) => { if (e.pointerType === "mouse") hover = true; };
+    const onLeave = () => { hover = false; };
+    const onFocusIn = () => { focus = true; };
+    const onFocusOut = () => { focus = false; };
+
+    wrap.addEventListener("pointerdown", onDown);
+    wrap.addEventListener("pointermove", onMove);
+    wrap.addEventListener("pointerup", onUp);
+    wrap.addEventListener("pointercancel", onUp);
+    wrap.addEventListener("click", onClick, true);
+    wrap.addEventListener("wheel", onWheel, { passive: false });
+    wrap.addEventListener("pointerenter", onEnter);
+    wrap.addEventListener("pointerleave", onLeave);
+    wrap.addEventListener("focusin", onFocusIn);
+    wrap.addEventListener("focusout", onFocusOut);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", run);
+      wrap.removeEventListener("pointerdown", onDown);
+      wrap.removeEventListener("pointermove", onMove);
+      wrap.removeEventListener("pointerup", onUp);
+      wrap.removeEventListener("pointercancel", onUp);
+      wrap.removeEventListener("click", onClick, true);
+      wrap.removeEventListener("wheel", onWheel);
+      wrap.removeEventListener("pointerenter", onEnter);
+      wrap.removeEventListener("pointerleave", onLeave);
+      wrap.removeEventListener("focusin", onFocusIn);
+      wrap.removeEventListener("focusout", onFocusOut);
+    };
+  }, [reverse, seconds]);
+
   return (
-    <div className={`marquee-track ${reverse ? "marquee-right" : "marquee-left"}`} style={{ animationDuration: `${seconds}s` }}>
-      <Group list={list} onOpen={onOpen} />
-      <Group list={list} onOpen={onOpen} hidden />
+    <div ref={wrapRef} className="cursor-grab touch-pan-y select-none overflow-hidden data-[drag=true]:cursor-grabbing">
+      <div ref={trackRef} className="marquee-track" style={{ animation: "none" }}>
+        <Group list={list} onOpen={onOpen} />
+        <Group list={list} onOpen={onOpen} hidden />
+      </div>
     </div>
   );
 }

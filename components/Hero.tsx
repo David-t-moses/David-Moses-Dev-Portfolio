@@ -188,35 +188,35 @@ export default function Hero() {
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/60 to-transparent" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pb-20 pt-28 lg:px-16">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pb-36 pt-28 md:pb-20 lg:px-16">
         <div className="max-w-4xl text-center">
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 md:mb-7">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true"></span>
             <span className="text-xs font-medium tracking-wide text-slate-300">Open to new projects</span>
           </div>
 
-          <h1 className="mb-5 text-[44px] leading-[1.04] tracking-tight sm:text-6xl md:text-7xl lg:text-[88px]">
+          <h1 className="mb-4 text-[44px] leading-[1.04] md:mb-5 tracking-tight sm:text-6xl md:text-7xl lg:text-[88px]">
             <span className="text-white">Hi, I&apos;m </span>
             <span className="block text-indigo-300 sm:inline">David Moses</span>
           </h1>
 
-          <div className="font-heading mb-6 text-xl leading-snug text-white text-balance md:text-4xl">
+          <div className="font-heading mb-5 text-xl leading-snug md:mb-6 text-white text-balance md:text-4xl">
             Full Stack Developer <br className="sm:hidden" />&amp; AI Engineer
           </div>
 
-          <p className="mx-auto mb-9 max-w-2xl text-pretty text-base leading-relaxed text-slate-400 md:text-lg">
+          <p className="mx-auto mb-8 max-w-[19rem] text-pretty text-[15px] sm:max-w-2xl md:mb-9 md:text-lg leading-relaxed text-slate-400 md:text-lg">
             I help turn your idea into a product people enjoy using, built to grow with your business.
           </p>
 
-          <div className="mx-auto grid max-w-sm grid-cols-2 gap-3 sm:flex sm:max-w-none sm:items-center sm:justify-center sm:gap-4">
-            <Link href="/#projects" className="btn-compact btn-compact-primary w-full justify-center px-4 sm:w-auto sm:px-6">
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
+            <Link href="/#projects" className="btn-compact btn-compact-primary justify-center px-5 sm:px-6">
               View My Work
             </Link>
             <Link
               href="https://calendly.com/davidtmoses5/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-compact btn-compact-ghost w-full justify-center px-4 sm:w-auto sm:px-6"
+              className="btn-compact btn-compact-ghost justify-center px-5 sm:px-6"
             >
               Book a call
             </Link>
