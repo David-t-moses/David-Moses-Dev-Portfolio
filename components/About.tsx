@@ -1,309 +1,381 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+// Earlier versions are in components/archive (AboutMonitorOnly, AboutApproachSeparateCards,
+// AboutApproachFourScenes, AboutApproachStepperDrawnScenes). The "Your idea, taking shape" monitor
+// intro is switched off.
+
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, MoveRight } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+// Each step shows the real thing a client sees at that stage, drawn as a small interface. They are
+// illustrations of the process, not client work.
+const panel =
+  "w-full max-w-[470px] overflow-hidden rounded-2xl border border-white/10 bg-slate-900/85 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.7)]";
+
+// A plain drawn tick. Used sparingly.
+function Tick({ tone = "indigo" }: { tone?: "indigo" | "green" }) {
+  return (
+    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${tone === "green" ? "bg-emerald-400/15 text-emerald-300" : "bg-indigo-400/15 text-indigo-200"}`}>
+      <svg viewBox="0 0 12 12" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M2.5 6.2 5 8.6l4.5-5" />
+      </svg>
+    </span>
+  );
+}
+
+const Avatar = ({ children, me }: { children: React.ReactNode; me?: boolean }) => (
+  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] ${me ? "bg-indigo-400/30 text-indigo-100" : "bg-white/10 text-slate-200"}`}>{children}</span>
+);
+
+const Dot = ({ c }: { c: string }) => <span className={`h-2 w-2 shrink-0 rounded-full ${c}`} />;
+
+// Listen: a real conversation, and what I wrote down from it. Words and colour, no icons.
+function Listen() {
+  return (
+    <div className="w-full max-w-[470px] space-y-3">
+      <div className="flex items-end gap-2.5">
+        <Avatar>You</Avatar>
+        <div className="max-w-[78%] rounded-2xl rounded-bl-md border border-white/10 bg-white/[0.06] px-4 py-3 text-[15px] text-slate-200">
+          I need a website that brings in customers.
+        </div>
+      </div>
+      <div className="flex flex-row-reverse items-end gap-2.5">
+        <Avatar me>Me</Avatar>
+        <div className="max-w-[78%] rounded-2xl rounded-br-md bg-indigo-400/20 px-4 py-3 text-[15px] text-indigo-50 ring-1 ring-indigo-300/20">
+          Got it. Tell me who they are and what you sell.
+        </div>
+      </div>
+      <div className={`${panel} !mt-4`}>
+        <p className="border-b border-white/10 px-5 py-3 text-sm text-slate-400">What I wrote down</p>
+        {[
+          { c: "bg-indigo-300", k: "Goal", v: "More customers online" },
+          { c: "bg-violet-300", k: "Audience", v: "First time buyers" },
+          { c: "bg-emerald-300", k: "Success", v: "More orders each month" },
+        ].map(({ c, k, v }) => (
+          <div key={k} className="flex items-center gap-3 border-b border-white/5 px-5 py-3.5 last:border-b-0">
+            <Dot c={c} />
+            <span className="w-[68px] text-sm text-slate-400">{k}</span>
+            <span className="flex-1 text-[15px] text-white">{v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Plan: the work laid out week by week, and the scope and price agreed in writing.
+function Plan() {
+  const phases = [
+    { name: "Design", from: 0, to: 1.6, c: "bg-indigo-300" },
+    { name: "Build", from: 1.2, to: 3.2, c: "bg-violet-300" },
+    { name: "Review", from: 2.8, to: 3.6, c: "bg-sky-300" },
+    { name: "Launch", from: 3.5, to: 4, c: "bg-emerald-300" },
+  ];
+  return (
+    <div className={panel}>
+      <div className="grid grid-cols-[72px_1fr] items-center gap-3 border-b border-white/10 px-5 py-3 text-[11px] text-slate-500">
+        <span className="text-sm text-slate-400">Week</span>
+        <span className="grid grid-cols-4 text-center text-xs">
+          {["1", "2", "3", "4"].map((w) => (
+            <span key={w}>{w}</span>
+          ))}
+        </span>
+      </div>
+      <div className="space-y-4 px-5 py-5">
+        {phases.map((p) => (
+          <div key={p.name} className="grid grid-cols-[72px_1fr] items-center gap-3">
+            <span className="text-sm text-slate-300">{p.name}</span>
+            <div className="relative h-3 rounded-full bg-white/[0.06]">
+              <span className={`absolute inset-y-0 rounded-full ${p.c} opacity-90`} style={{ left: `${(p.from / 4) * 100}%`, width: `${((p.to - p.from) / 4) * 100}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 border-t border-white/10 text-sm text-slate-200">
+        <span className="flex items-center gap-2.5 border-r border-white/10 px-4 py-3.5 text-[13px] md:px-5 md:text-sm">
+          <Tick tone="green" />
+          Scope agreed
+        </span>
+        <span className="flex items-center gap-2.5 px-4 py-3.5 text-[13px] md:px-5 md:text-sm">
+          <Tick tone="green" />
+          Price agreed
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// Build: a real preview link, a note on the button, my reply, and sign off.
+function Build() {
+  return (
+    <div className={panel}>
+      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <span className="ml-3 flex min-w-0 flex-1 items-center justify-between gap-2 rounded-md bg-white/[0.06] px-3 py-1 text-xs text-slate-400">
+          <span className="truncate">preview.yourbusiness.com</span>
+          <span className="flex shrink-0 items-center gap-1.5" aria-hidden="true">
+            <span className="h-2.5 w-3.5 rounded-[3px] border border-indigo-200/80" />
+            <span className="h-3.5 w-2 rounded-[3px] border border-white/30" />
+          </span>
+        </span>
+      </div>
+
+      <div className="relative bg-white/[0.02] px-6 pb-5 pt-5">
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <span className="h-3.5 w-3.5 rounded bg-indigo-400" />
+            <span className="h-2.5 w-14 rounded-full bg-white/70" />
+          </span>
+          <span className="flex gap-3">
+            <span className="h-2 w-8 rounded-full bg-white/15" />
+            <span className="h-2 w-8 rounded-full bg-white/15" />
+            <span className="h-2 w-8 rounded-full bg-white/15" />
+          </span>
+        </div>
+        <div className="mt-5 grid grid-cols-[1.1fr_1fr] items-center gap-5">
+          <div className="space-y-2.5">
+            <div className="h-3.5 w-full rounded-full bg-white/85" />
+            <div className="h-3.5 w-3/4 rounded-full bg-white/85" />
+            <div className="h-2 w-5/6 rounded-full bg-white/15" />
+            <div className="relative pt-3">
+              <div className="h-9 w-32 rounded-full bg-indigo-400 ring-4 ring-indigo-300/25" />
+              <span className="absolute -right-2 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white text-[11px] text-slate-900 shadow">1</span>
+            </div>
+          </div>
+          <div className="relative h-24 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-indigo-400/35 via-violet-400/20 to-sky-400/10">
+            <span className="absolute right-3 top-3 h-5 w-5 rounded-full bg-white/50" />
+            <svg viewBox="0 0 100 60" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-12 w-full" aria-hidden="true">
+              <path d="M0 60 L25 20 L45 42 L68 10 L100 60 Z" fill="rgba(15,23,42,0.55)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2 border-t border-white/10 bg-slate-950/50 px-4 py-4">
+        <div className="flex items-start gap-3">
+          <Avatar>You</Avatar>
+          <div className="rounded-xl rounded-tl-sm border border-white/10 bg-white/[0.06] px-3.5 py-2 text-sm text-slate-200">Can we make this button stand out more?</div>
+        </div>
+        <div className="flex items-start justify-end gap-3">
+          <div className="rounded-xl rounded-tr-sm bg-indigo-400/20 px-3.5 py-2 text-sm text-indigo-50 ring-1 ring-indigo-300/20">Done. Take another look.</div>
+          <Avatar me>Me</Avatar>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1.5">
+          <span className="flex items-center gap-2 text-sm text-slate-300">
+            <Tick tone="green" />
+            Resolved
+          </span>
+          <span className="whitespace-nowrap rounded-full bg-white px-4 py-1.5 text-sm text-slate-900">Approve this stage</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Launch: it goes live, visitors arrive, and the basics are already handled.
+function Launch() {
+  return (
+    <div className={panel}>
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
+        <span className="text-sm text-slate-300">yourbusiness.com</span>
+        <span className="flex items-center gap-2 text-sm text-emerald-300">
+          <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+          Live
+        </span>
+      </div>
+      <div className="px-5 pb-2 pt-4">
+        <div className="flex items-center justify-between text-xs text-slate-400">
+          <span>Visitors</span>
+          <span className="text-emerald-300">Growing</span>
+        </div>
+        <svg viewBox="0 0 220 70" className="mt-2 h-[70px] w-full" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#34d399" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#34d399" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M0 58 L30 52 L60 54 L90 40 L120 44 L150 26 L185 18 L220 6 V70 H0 Z" fill="url(#lg)" />
+          <path d="M0 58 L30 52 L60 54 L90 40 L120 44 L150 26 L185 18 L220 6" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <div className="grid grid-cols-2 border-t border-white/10">
+        {["Domain connected", "Fast on every device", "Ready for search", "Secure and backed up"].map((t, i) => (
+          <span key={t} className={`flex items-center gap-2 px-3 py-3 text-[12px] leading-tight text-slate-200 md:gap-2.5 md:px-4 md:text-[13px] ${i % 2 === 0 ? "border-r border-white/10" : ""} ${i < 2 ? "border-b border-white/10" : ""}`}>
+            <Tick tone="green" />
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Written the way I would say it across a table: first person, plain, specific.
+const steps = [
+  {
+    title: "Listen",
+    line: "Every project starts with a conversation, not a questionnaire.",
+    para: "I ask about your business, your customers and what a good result looks like, then tell you honestly what I think will work. If it is not the right fit, I will say so.",
+    View: Listen,
+  },
+  {
+    title: "Plan",
+    line: "Before I write a line of code, you know exactly what you are getting.",
+    para: "A clear scope, a timeline and a price, agreed in writing. No surprises later, and you always know what happens next.",
+    View: Plan,
+  },
+  {
+    title: "Build",
+    line: "I build in stages and show you the real thing as I go.",
+    para: "Working previews, not screenshots. You react while it is still easy to change, and nothing goes live without your say.",
+    View: Build,
+  },
+  {
+    title: "Launch and grow",
+    line: "Launch day is where I start paying attention, not where I disappear.",
+    para: "I handle the launch, make sure it is fast, secure and easy to find, and stay close afterwards. If something needs fixing or you want to grow it, you message me and I answer.",
+    View: Launch,
+  },
+];
+
+const ADVANCE_MS = 7000;
 
 export default function About() {
-  const [activeSection, setActiveSection] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const sections = [
-    {
-      id: 1,
-      number: "01",
-      title: "My Approach",
-      subtitle: "The Foundation",
-      description:
-        "I build with intention, balancing design aesthetics with technical precision. Each line of code serves the goal of creating seamless, human-centered digital experiences that connect emotionally and perform beautifully.",
-      emoji: "⚡",
-      color: "indigo",
-      gradient: "from-indigo-500 to-purple-500",
-      stats: [
-        { label: "Years of Experience", value: "5+" },
-        { label: "Projects Completed", value: "50+" },
-        { label: "Client Satisfaction", value: "100%" },
-      ],
-      position: "left" // line on left
-    },
-    {
-      id: 2,
-      number: "02",
-      title: "How I Work",
-      subtitle: "The Process",
-      description:
-        "Every project begins with understanding your goals. Through clear communication and iteration, I move from discovery to deployment with precision; ensuring your website looks great, performs fast, and scales effortlessly.",
-      emoji: "🎯",
-      color: "cyan",
-      gradient: "from-cyan-500 to-blue-500",
-      steps: [
-        "Discovery & Strategy",
-        "Wireframes & Design",
-        "Development",
-        "Testing & QA",
-        "Launch & Support",
-      ],
-      position: "right" // line on right
-    },
-    {
-      id: 3,
-      number: "03",
-      title: "Real Results",
-      subtitle: "The Outcome",
-      description:
-        "Your success defines mine. Every site I deliver is optimized for performance, accessibility, and conversion - designed not just to look good, but to grow your business and make an impact.",
-      emoji: "✨",
-      color: "purple",
-      gradient: "from-purple-500 to-pink-500",
-      features: [
-        "High Performance & SEO",
-        "Conversion-Focused UX",
-        "Scalable Architecture",
-        "Continuous Optimization",
-      ],
-      position: "left" // centered with line on left
-    },
-  ];
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState(0);
+  const [inView, setInView] = useState(false);
+  const [hold, setHold] = useState(false); // pointer or focus inside
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = parseInt(entry.target.dataset.index!);
-            setActiveSection(index);
-          }
-        });
-      },
-      { threshold: 0.5, rootMargin: "-50% 0px -50% 0px" }
-    );
-
-    const sectionElements = document.querySelectorAll(".content-section");
-    sectionElements.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
+  // Moves on by itself only while the card is on screen, not hovered or focused, and motion is allowed.
+  // Choosing a step restarts the wait.
+  useEffect(() => {
+    if (reduce || !inView || hold) return;
+    const t = window.setTimeout(() => setActive((a) => (a + 1) % steps.length), ADVANCE_MS);
+    return () => window.clearTimeout(t);
+  }, [active, inView, hold, reduce]);
+
+  const View = steps[active].View;
+
   return (
-    <section
-      className="relative min-h-screen overflow-hidden bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950"
-      id="about"
-    >
-      {/* Subtle decorative elements matching Hero */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+    <section id="about" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
+      <div className="relative z-10 mx-auto max-w-[1200px]">
+        <h2 className="mb-10 text-center text-4xl leading-[1.1] tracking-tight text-white md:mb-12 md:text-5xl">
+          How we&apos;ll work together.
+        </h2>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-24">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
-            <span className="text-indigo-400 text-sm font-semibold tracking-wider uppercase">
-              About me
-            </span>
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Building with{" "}
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Purpose & Precision
-            </span>
-          </h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto">
-            I believe great websites go beyond visuals — they're built on strategy, empathy, and performance. That's what I bring to every project.
-          </p>
-        </div>
-
-        {/* Timeline */}
-        <div className="relative space-y-48 md:space-y-64" ref={containerRef}>
-          {sections.map((section, index) => (
-            <motion.div
-              key={section.id}
-              data-index={index}
-              className={`content-section relative min-h-[60vh] flex items-center ${
-                section.position === "right" 
-                  ? "justify-end" 
-                  : section.position === "center-left" 
-                  ? "justify-center" 
-                  : ""
-              }`}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: index * 0.1 }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              {/* Vertical Line - Position based on section */}
-              <div 
-                className={`absolute top-0 bottom-0 w-0.5 bg-gradient-to-b ${section.gradient} ${
-                  section.position === "left" 
-                    ? "left-8 md:left-16" 
-                    : section.position === "right" 
-                    ? "right-8 md:right-16" 
-                    : "left-8 md:left-1/4"
-                }`}
-              ></div>
-
-              {/* Content */}
-              <div className={`w-full ${
-                section.position === "left" 
-                  ? "ml-24 md:ml-32 max-w-3xl" 
-                  : section.position === "right" 
-                  ? "mr-24 md:mr-32 max-w-3xl text-right" 
-                  : "max-w-2xl ml-24 md:ml-32"
-              }`}>
-                {/* Section number background */}
-                <div
-                  className={`text-[80px] md:text-[140px] font-extrabold bg-gradient-to-br ${section.gradient} bg-clip-text text-transparent opacity-10 leading-none mb-4`}
-                >
-                  {section.number}
-                </div>
-
-                <div
-                  className={`inline-block px-4 py-1.5 rounded-full bg-${section.color}-500/10 border border-${section.color}-500/30 text-${section.color}-400 text-xs font-semibold uppercase tracking-wider mb-6`}
-                >
-                  {section.subtitle}
-                </div>
-
-                <h3 className="text-xl md:text-4xl font-bold text-white mb-6 tracking-tight leading-tight">
-                  {section.title}
-                </h3>
-
-                <p className="text-base md:text-lg text-gray-400 leading-relaxed mb-10">
-                  {section.description}
-                </p>
-
-                {/* Stats */}
-                {section.stats && (
-                  <div className={`flex flex-wrap gap-4 mt-10 ${section.position === "right" ? "justify-end" : ""}`}>
-                    {section.stats.map((stat, idx) => (
-                      <motion.div
-                        key={idx}
-                        whileHover={{ scale: 1.05 }}
-                        className={`px-5 py-2 rounded-xl bg-white/5 border border-${section.color}-500/20 text-gray-300 text-sm md:text-base font-medium hover:bg-white/10 transition-all cursor-default`}
-                      >
-                        {stat.label}
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Steps */}
-                {section.steps && (
-                  <div className={`flex flex-wrap gap-3 ${section.position === "right" ? "justify-end" : ""}`}>
-                    {section.steps.map((step, idx) => (
-                      <motion.div
-                        key={idx}
-                        whileHover={{ scale: 1.05 }}
-                        className={`px-5 py-2.5 rounded-xl bg-white/5 border border-${section.color}-500/20 text-gray-300 text-sm font-medium hover:bg-white/10 transition-all`}
-                      >
-                        {step}
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Features */}
-                {section.features && (
-                  <div className="space-y-4">
-                    {section.features.map((feature, idx) => (
-                      <motion.div
-                        key={idx}
-                        whileHover={{ x: 4 }}
-                        className="flex items-center gap-4 group"
-                      >
-                        <div
-                          className={`w-2 h-2 rounded-full bg-gradient-to-r ${section.gradient} group-hover:scale-150 transition-transform`}
-                        />
-                        <span className="text-base md:text-lg text-gray-300 group-hover:text-white transition-colors">
-                          {feature}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-
-                <div
-                  className={`mt-12 h-1 w-32 bg-gradient-to-r ${section.gradient} rounded-full ${section.position === "right" ? "ml-auto" : ""}`}
-                ></div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* --- ABOUT SYSTEM CTA --- */}
-        <motion.div 
-          className="mt-40 relative group"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+        <div
+          ref={rootRef}
+          onMouseEnter={() => setHold(true)}
+          onMouseLeave={() => setHold(false)}
+          onFocus={() => setHold(true)}
+          onBlur={() => setHold(false)}
+          className="rounded-3xl border border-white/10 bg-slate-900/60 p-5 shadow-[0_14px_36px_-26px_rgba(0,0,0,0.55)] md:p-8"
         >
-          {/* Outer Glow Effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition duration-700"></div>
-          
-          <div className="relative overflow-hidden rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-xl">
-            {/* Animated Background Gradient Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(99,102,241,0.1),transparent)]" />
-
-            <div className="relative p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-10">
-              
-              <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-                {/* Visual Icon Node */}
-                <div className="relative">
-                  <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full animate-pulse"></div>
-                  <div className="relative h-20 w-20 rounded-2xl bg-slate-950 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                    <svg 
-                      className="w-10 h-10" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="1.5" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
+          {/* The four steps in order, left to right */}
+          <ol className="m-0 grid list-none grid-cols-4 gap-1 rounded-2xl bg-white/[0.04] p-1 md:flex md:items-center md:gap-0 md:rounded-none md:bg-transparent md:p-0">
+            {steps.map((step, i) => {
+              const on = i === active;
+              return (
+                <React.Fragment key={step.title}>
+                  <li className="flex list-none items-center md:shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setActive(i)}
+                      aria-current={on ? "step" : undefined}
+                      aria-label={step.title}
+                      className={`w-full whitespace-nowrap rounded-xl border px-1 py-2.5 text-center text-[13px] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300 md:px-5 md:py-3 md:text-lg ${
+                        on ? "border-white/15 bg-white/[0.1] text-white" : "border-transparent text-slate-400 hover:bg-white/[0.04] hover:text-slate-200"
+                      }`}
                     >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                  </div>
-                </div>
+                      {i === 3 ? (
+                        <>
+                          Launch<span className="hidden md:inline"> and grow</span>
+                        </>
+                      ) : (
+                        step.title
+                      )}
+                    </button>
+                  </li>
+                  {/* One normal arrow, centred in the gap between the two tabs */}
+                  {i < steps.length - 1 && (
+                    <li aria-hidden="true" className="hidden min-w-[40px] flex-1 list-none items-center justify-center text-indigo-300/60 md:flex">
+                      <MoveRight size={32} strokeWidth={1.5} />
+                    </li>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </ol>
 
-                <div className="max-w-md">
-                  <h4 className="text-2xl font-bold text-white mb-2 tracking-tight">
-                    Establish <span className="text-indigo-400 italic">Partnership?</span>
-                  </h4>
-                  <p className="text-slate-400 text-sm md:text-base leading-relaxed">
-                    I’m currently reviewing new project inquiries for 2024. Let’s determine if our technical goals align.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-                <Link 
-                  href="#contact" 
-                  className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95"
+          <div className="mt-6 grid items-stretch gap-6 md:mt-8 lg:grid-cols-[5fr_6fr] lg:gap-12">
+            {/* What the client sees at this stage */}
+            <div
+              aria-hidden="true"
+              className="relative order-first flex h-[470px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/50 p-4 md:p-8 lg:order-last lg:h-[480px]"
+            >
+              <span className="scene-grid pointer-events-none absolute inset-0" />
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2" style={{ backgroundImage: "radial-gradient(ellipse 60% 100% at 50% 100%, rgba(129, 140, 248, 0.26), transparent 75%)" }} />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={active}
+                  initial={reduce ? false : { opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative flex w-full justify-center"
                 >
-                  Initiate Discussion
-                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-ping" />
-                </Link>
-                
-                <a 
-                  href="https://calendly.com/davidtmoses5/30min" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-center"
-                >
-                  View Availability
-                </a>
-              </div>
-
+                  <View />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {/* Subtle Industrial Detail */}
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+            {/* What it means, and what to do next */}
+            <div className="flex flex-col justify-between gap-8">
+              <div aria-live="polite" className="pt-2">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={active}
+                    initial={reduce ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  >
+                    <p className="text-pretty text-2xl leading-snug text-white md:text-[32px] md:leading-[1.22]">{steps[active].line}</p>
+                    <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-slate-300 md:text-[17px] md:leading-[1.7]">{steps[active].para}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:items-center md:gap-4">
+                <Link href="#contact" className="btn-compact btn-compact-light w-full justify-center gap-2 px-3 md:w-auto md:px-5">
+                  Start a project
+                  <ArrowRight className="hidden h-4 w-4 md:block" aria-hidden="true" />
+                </Link>
+                <a
+                  href="https://calendly.com/davidtmoses5/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-compact btn-compact-ghost w-full justify-center px-3 md:w-auto md:px-5"
+                >
+                  Book a call
+                </a>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

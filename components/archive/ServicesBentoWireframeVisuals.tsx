@@ -1,0 +1,520 @@
+"use client";
+
+// Earlier versions are in components/archive (Services*.tsx), the latest being
+// ServicesMarqueeSkeletonVisuals.tsx (same cards with abstract skeleton drawings).
+
+import React, { useEffect, useRef } from "react";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
+import { type LucideIcon, ArrowRight, Bell, Check, CircleHelp, CreditCard, Database, FileText, Heart, Home, LayoutGrid, MapPin, Mail, MessageSquare, RefreshCw, Search, Send, Shield, ShoppingBag, Sparkles, Table, TrendingUp, Truck, Users, Zap } from "lucide-react";
+
+/* ---------- living pictures: each service shown working, on a loop ----------
+   Fixed 330 x 240 stages so the motion can be written in pixels. CSS transform and opacity only; every
+   loop stops while its card is off screen (data-run) and for reduced motion (shows the finished frame).
+   Illustrations only: no real clients, data or figures. */
+
+const ui = "rounded-xl border border-slate-200 bg-white shadow-[0_22px_50px_-20px_rgba(99,102,241,0.55)]";
+const Bar = ({ w, tone = "bg-slate-200", h = "h-2" }: { w: string; tone?: string; h?: string }) => (
+  <span className={`block rounded-full ${h} ${tone}`} style={{ width: w }} />
+);
+// A white tile with a coloured icon, so it pops on the dark card.
+const Tile = ({ Icon, color = "text-slate-700", size = "h-11 w-11" }: { Icon: LucideIcon; color?: string; size?: string }) => (
+  <span className={`relative flex ${size} shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_10px_24px_-10px_rgba(0,0,0,0.6)] ${color}`}>
+    <Icon size={19} aria-hidden="true" />
+  </span>
+);
+const Tick = ({ className = "", style }: { className?: string; style?: React.CSSProperties }) => (
+  <span className={`flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white ring-2 ring-slate-900 ${className}`} style={style}>
+    <Check size={10} strokeWidth={3} aria-hidden="true" />
+  </span>
+);
+type Vars = React.CSSProperties & Record<string, string | number>;
+const at = (x: number, y: number): React.CSSProperties => ({ left: x, top: y });
+const Hop = ({ from, to, delay, tone = "bg-white" }: { from: [number, number]; to: [number, number]; delay: string; tone?: string }) => (
+  <span
+    aria-hidden="true"
+    className={`sv-hop absolute -left-1 -top-1 h-2 w-2 rounded-full ${tone} shadow-[0_0_10px_2px_rgba(196,181,253,0.9)]`}
+    style={{ "--x1": `${from[0]}px`, "--y1": `${from[1]}px`, "--x2": `${to[0]}px`, "--y2": `${to[1]}px`, "--d": delay } as Vars}
+  />
+);
+
+// A site that is being used: it scrolls, a visitor clicks Buy, the cart counts up, an order arrives, sales climb.
+function Site() {
+  return (
+    <div className="sv-scene" style={{ "--P": "9s" } as Vars}>
+      <div className={`${ui} absolute left-1 top-1 h-[200px] w-[322px] overflow-hidden`}>
+        <div className="flex h-7 items-center gap-1.5 border-b border-slate-200 bg-slate-100 px-3">
+          <span className="h-2 w-2 rounded-full bg-rose-400" />
+          <span className="h-2 w-2 rounded-full bg-amber-400" />
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+          <span className="ml-2 h-3.5 flex-1 rounded bg-white" />
+        </div>
+        <div className="relative h-[172px] overflow-hidden bg-white">
+          <div className="sv-page px-3.5 pt-3">
+            <div className="flex h-5 items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span className="h-3.5 w-3.5 rounded bg-indigo-500" />
+                <Bar w="34px" tone="bg-slate-700" />
+              </span>
+              <span className="flex items-center gap-2.5">
+                <Bar w="22px" />
+                <Bar w="22px" />
+                <span className="relative text-slate-600">
+                  <ShoppingBag size={14} aria-hidden="true" />
+                  <span className="sv-badge absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-rose-500" />
+                </span>
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-[1.2fr_1fr] items-center gap-3">
+              <div className="space-y-1.5">
+                <Bar w="100%" tone="bg-slate-800" h="h-2.5" />
+                <Bar w="70%" tone="bg-slate-800" h="h-2.5" />
+                <Bar w="85%" tone="bg-slate-300" h="h-1.5" />
+                <span className="sv-cta block h-5 w-14 rounded-full bg-indigo-500" />
+              </div>
+              <div className="relative h-[62px] overflow-hidden rounded-lg bg-gradient-to-br from-indigo-400 via-violet-400 to-sky-300">
+                <span className="absolute right-2 top-2 h-4 w-4 rounded-full bg-amber-200" />
+                <svg viewBox="0 0 100 60" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-8 w-full" aria-hidden="true">
+                  <path d="M0 60 L25 20 L45 42 L68 10 L100 60 Z" fill="rgba(49,46,129,0.55)" />
+                </svg>
+              </div>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {["from-indigo-300 to-indigo-500", "from-amber-200 to-orange-400", "from-emerald-200 to-teal-400"].map((c, i) => (
+                <div key={i} className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
+                  <div className={`h-7 rounded bg-gradient-to-br ${c}`} />
+                  <span className="mt-1.5 block h-1.5 w-1/2 rounded-full bg-slate-300" />
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 grid grid-cols-[1fr_1.2fr] gap-3">
+              <div className="space-y-1.5">
+                <Bar w="80%" tone="bg-slate-700" h="h-2.5" />
+                <Bar w="100%" h="h-1.5" />
+                <Bar w="90%" h="h-1.5" />
+              </div>
+              <div className="h-[52px] rounded-lg bg-gradient-to-br from-rose-300 to-violet-400" />
+            </div>
+          </div>
+          <span className="sv-cursor pointer-events-none absolute left-0 top-0" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 1.5v11l3-2.8 2 4.3 2-.9-2-4.2h4.2L2 1.5Z" fill="#0f172a" stroke="#fff" strokeWidth="1" strokeLinejoin="round" /></svg>
+          </span>
+          <div className="sv-toast absolute bottom-2 right-2 flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-2.5 py-1.5 shadow-lg">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <Bar w="38px" tone="bg-slate-300" h="h-1.5" />
+          </div>
+        </div>
+      </div>
+      <div className="absolute bottom-0 right-0 w-[108px] rounded-xl bg-white p-2.5 shadow-[0_18px_40px_-12px_rgba(16,185,129,0.6)]">
+        <div className="flex items-center justify-between">
+          <TrendingUp size={13} aria-hidden="true" className="text-emerald-600" />
+          <Bar w="28px" tone="bg-slate-300" h="h-1.5" />
+        </div>
+        <div className="mt-2 flex h-9 items-end gap-1.5">
+          {[28, 40, 36, 58, 72, 100].map((h, i) => (
+            <span key={i} className={`sv-bar flex-1 rounded-sm ${i === 5 ? "bg-emerald-500" : "bg-emerald-200"}`} style={{ height: `${h}%`, "--i": i } as Vars} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// A support chat that plays out: a question, the assistant thinking, an answer that writes itself, and its source.
+function Chat() {
+  return (
+    <div className="sv-scene" style={{ "--P": "10s" } as Vars}>
+      <div className={`${ui} absolute left-[15px] top-1.5 w-[300px] overflow-hidden`}>
+        <div className="flex items-center gap-2.5 border-b border-slate-200 px-3.5 py-2.5">
+          <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white">
+            <Sparkles size={15} aria-hidden="true" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+          </span>
+          <Bar w="70px" tone="bg-slate-700" />
+        </div>
+        <div className="relative h-[150px] bg-slate-50 p-3">
+          <div className="sv-m1 flex w-[74%] items-center gap-2.5 rounded-2xl rounded-bl-sm bg-white px-3 py-2.5 shadow-sm ring-1 ring-slate-200">
+            <CircleHelp size={15} aria-hidden="true" className="shrink-0 text-amber-500" />
+            <div className="flex-1 space-y-1.5">
+              <Bar w="100%" tone="bg-slate-300" h="h-1.5" />
+              <Bar w="60%" tone="bg-slate-200" h="h-1.5" />
+            </div>
+          </div>
+          <div className="sv-typing absolute right-3 top-[64px] flex items-center gap-1.5 rounded-2xl rounded-br-sm bg-violet-500 px-3.5 py-3">
+            <span className="sc-dot h-1.5 w-1.5 rounded-full bg-white" />
+            <span className="sc-dot sc-d2 h-1.5 w-1.5 rounded-full bg-white" />
+            <span className="sc-dot sc-d3 h-1.5 w-1.5 rounded-full bg-white" />
+          </div>
+          <div className="sv-m2 absolute right-3 top-[60px] flex w-[78%] items-center gap-2.5 rounded-2xl rounded-br-sm bg-gradient-to-br from-violet-500 to-indigo-500 px-3 py-2.5 shadow-md">
+            <div className="flex-1 space-y-1.5">
+              {["100%", "82%", "46%"].map((w, i) => (
+                <span key={i} className="sv-line block h-1.5 origin-left rounded-full bg-white/80" style={{ width: w, "--i": i } as Vars} />
+              ))}
+            </div>
+            <Tick className="sv-tick !ring-0" />
+          </div>
+          <div className="sv-chip absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-slate-500 shadow-sm ring-1 ring-slate-200">
+            <FileText size={11} aria-hidden="true" className="text-sky-500" />
+            <Bar w="34px" tone="bg-slate-300" h="h-1.5" />
+          </div>
+        </div>
+        <div className="flex items-center justify-between border-t border-slate-200 bg-white px-3.5 py-2.5">
+          <Bar w="80px" tone="bg-slate-200" />
+          <Send size={13} aria-hidden="true" className="text-violet-500" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Two phones on a gentle float: a delivery route draws itself and the pin follows it; the other phone's feed scrolls.
+function Phone() {
+  const route = "M12 64 C 30 60, 30 34, 52 40 S 78 22, 88 14";
+  return (
+    <div className="sv-scene">
+      <div className="sv-float absolute left-[40px] top-[48px] z-0 opacity-90" style={{ animationDuration: "6s", "--r": "-3deg" } as Vars}>
+        <div className="h-[214px] w-[120px] overflow-hidden rounded-[26px] border-[3px] border-slate-800 bg-white p-2 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.8)]">
+          <div className="mx-auto mb-2 h-1.5 w-1.5 rounded-full bg-slate-300" />
+          <div className="flex items-center justify-between px-0.5">
+            <Bar w="34px" tone="bg-slate-700" />
+            <span className="h-4 w-4 rounded-full bg-gradient-to-br from-pink-400 to-rose-500" />
+          </div>
+          <div className="mt-2 h-[150px] overflow-hidden">
+            <div className="sv-feed space-y-2">
+              {["from-rose-300 to-pink-500", "from-sky-300 to-blue-500", "from-amber-200 to-orange-400", "from-emerald-300 to-teal-500"].map((c, i) => (
+                <div key={i} className="rounded-lg border border-slate-200 bg-slate-50 p-1.5">
+                  <div className={`h-12 rounded bg-gradient-to-br ${c}`} />
+                  <div className="mt-1.5 flex items-center justify-between">
+                    <Bar w="40%" tone="bg-slate-300" h="h-1.5" />
+                    <Heart size={10} aria-hidden="true" className={i === 0 ? "fill-rose-500 text-rose-500" : "text-slate-400"} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="sv-float absolute right-[44px] top-[8px] z-10" style={{ animationDuration: "5s", animationDelay: "-1.5s", "--r": "2deg" } as Vars}>
+        <div className="h-[220px] w-[124px] overflow-hidden rounded-[28px] border-[3px] border-slate-800 bg-white p-2 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.9)]">
+          <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-slate-800" />
+          <div className="relative h-[100px] overflow-hidden rounded-xl bg-gradient-to-br from-emerald-100 to-sky-200">
+            <svg viewBox="0 0 100 80" className="absolute inset-0 h-full w-full" aria-hidden="true">
+              <path d="M-5 30 L40 20 L70 50 L105 40 M30 -5 L45 85 M80 -5 L72 85" stroke="rgba(255,255,255,0.9)" strokeWidth="5" fill="none" />
+              <path d={route} className="sv-route" fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinecap="round" />
+              <circle cx="0" cy="0" r="4.5" fill="#4f46e5" stroke="#fff" strokeWidth="1.5" className="sv-pin" style={{ offsetPath: `path("${route}")` }} />
+            </svg>
+            <MapPin size={17} aria-hidden="true" className="absolute right-2 top-1.5 fill-rose-500 text-white" />
+          </div>
+          <div className="mt-3 flex items-center gap-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+              <Truck size={13} aria-hidden="true" />
+            </span>
+            <div className="flex-1 space-y-1.5">
+              <Bar w="80%" tone="bg-slate-700" h="h-1.5" />
+              <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
+                <span className="sv-progress block h-full w-full origin-left rounded-full bg-indigo-500" />
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 grid grid-cols-3 border-t border-slate-200 pt-2.5 text-slate-400">
+            <Home size={13} aria-hidden="true" className="mx-auto text-indigo-500" />
+            <Search size={13} aria-hidden="true" className="mx-auto" />
+            <Users size={13} aria-hidden="true" className="mx-auto" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// One email arrives, the AI takes it, and the work is handed to three places on its own.
+function Flow() {
+  const ai: [number, number] = [165, 120];
+  const outs: { Icon: LucideIcon; color: string; p: [number, number]; d: string }[] = [
+    { Icon: Users, color: "text-sky-500", p: [296, 52], d: "3.7s" },
+    { Icon: Send, color: "text-emerald-500", p: [296, 120], d: "3.85s" },
+    { Icon: Bell, color: "text-amber-500", p: [296, 188], d: "4s" },
+  ];
+  return (
+    <div className="sv-scene" style={{ "--P": "7s" } as Vars}>
+      <svg viewBox="0 0 330 240" className="absolute inset-0 h-full w-full" aria-hidden="true">
+        <line x1="36" y1="120" x2={ai[0]} y2={ai[1]} stroke="#c4b5fd" strokeOpacity="0.7" strokeWidth="1.5" strokeDasharray="2 4" className="sc-flow" />
+        {outs.map((o, i) => (
+          <line key={i} x1={ai[0]} y1={ai[1]} x2={o.p[0]} y2={o.p[1]} stroke="#c4b5fd" strokeOpacity="0.7" strokeWidth="1.5" strokeDasharray="2 4" className="sc-flow" />
+        ))}
+      </svg>
+      <span className="absolute -translate-x-1/2 -translate-y-1/2" style={at(36, 120)}>
+        <Tile Icon={Mail} color="text-rose-500" size="h-12 w-12" />
+      </span>
+      <span className="absolute -translate-x-1/2 -translate-y-1/2" style={at(ai[0], ai[1])}>
+        <span className="sv-pulse flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-[0_0_44px_-4px_rgba(167,139,250,0.95)]" style={{ "--d": "1.7s" } as Vars}>
+          <Sparkles size={26} aria-hidden="true" />
+        </span>
+      </span>
+      {outs.map(({ Icon, color, p, d }, i) => (
+        <span key={i} className="absolute -translate-x-1/2 -translate-y-1/2" style={at(p[0], p[1])}>
+          <Tile Icon={Icon} color={color} size="h-11 w-11" />
+          <Tick className="sv-pop absolute -right-1.5 -top-1.5" style={{ "--d": d } as Vars} />
+        </span>
+      ))}
+      <Hop from={[36, 120]} to={ai} delay="0s" />
+      {outs.map((o, i) => (
+        <Hop key={i} from={ai} to={o.p} delay="2s" />
+      ))}
+    </div>
+  );
+}
+
+// Your app in the middle, data travelling out to the tools it talks to and back, each one lighting up as it answers.
+function Connect() {
+  const c: [number, number] = [165, 120];
+  const nodes: { Icon: LucideIcon; color: string; p: [number, number] }[] = [
+    { Icon: CreditCard, color: "text-amber-500", p: [48, 52] },
+    { Icon: Users, color: "text-sky-500", p: [282, 52] },
+    { Icon: MessageSquare, color: "text-emerald-500", p: [48, 188] },
+    { Icon: Database, color: "text-violet-500", p: [282, 188] },
+  ];
+  return (
+    <div className="sv-scene" style={{ "--P": "6s" } as Vars}>
+      <svg viewBox="0 0 330 240" className="absolute inset-0 h-full w-full" aria-hidden="true">
+        {nodes.map((n, i) => (
+          <line key={i} x1={c[0]} y1={c[1]} x2={n.p[0]} y2={n.p[1]} stroke="#a5b4fc" strokeOpacity="0.7" strokeWidth="1.5" strokeDasharray="2 4" className="sc-flow" />
+        ))}
+      </svg>
+      <span className="sv-ring absolute h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-indigo-300/70" style={at(c[0], c[1])} />
+      <span className="absolute flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-[0_0_44px_-4px_rgba(129,140,248,0.95)]" style={at(c[0], c[1])}>
+        <LayoutGrid size={26} aria-hidden="true" />
+      </span>
+      {nodes.map(({ Icon, color, p }, i) => (
+        <span key={i} className="absolute -translate-x-1/2 -translate-y-1/2" style={at(p[0], p[1])}>
+          <span className="sv-glow block rounded-xl" style={{ "--d": `${i * 0.6 + 1.2}s` } as Vars}>
+            <Tile Icon={Icon} color={color} size="h-12 w-12" />
+          </span>
+          <Tick className="absolute -right-1.5 -top-1.5" />
+        </span>
+      ))}
+      {nodes.map((n, i) => (
+        <React.Fragment key={i}>
+          <Hop from={c} to={n.p} delay={`${i * 0.6}s`} tone="bg-indigo-200" />
+          <Hop from={n.p} to={c} delay={`${i * 0.6 + 1.5}s`} tone="bg-emerald-300" />
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+// A product screen where the chart builds itself and an AI note appears on the bar that matters.
+function InProduct() {
+  return (
+    <div className="sv-scene" style={{ "--P": "8s" } as Vars}>
+      <div className={`${ui} absolute left-[15px] top-[34px] w-[300px] p-3.5`}>
+        <div className="flex items-center justify-between">
+          <Bar w="56px" tone="bg-slate-800" h="h-2.5" />
+          <span className="h-5 w-5 rounded-full bg-gradient-to-br from-amber-300 to-rose-400" />
+        </div>
+        <div className="mt-3 flex h-[100px] items-end gap-2.5">
+          {[38, 52, 44, 60, 48, 92, 56].map((h, i) => (
+            <span
+              key={i}
+              className={`sv-grow flex-1 origin-bottom rounded-t-md ${i === 5 ? "sv-hl bg-gradient-to-t from-violet-500 to-fuchsia-400" : "bg-indigo-100"}`}
+              style={{ height: `${h}%`, "--i": i } as Vars}
+            />
+          ))}
+        </div>
+        <div className="mt-3 space-y-2">
+          <Bar w="80%" h="h-1.5" />
+          <Bar w="55%" h="h-1.5" />
+        </div>
+      </div>
+      <div className="sv-note absolute right-[18px] top-[4px] flex items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-[0_14px_30px_-8px_rgba(139,92,246,0.7)]">
+        <Sparkles size={14} aria-hidden="true" className="sv-spin text-violet-500" />
+        <TrendingUp size={14} aria-hidden="true" className="text-emerald-500" />
+        <Bar w="30px" tone="bg-slate-300" h="h-1.5" />
+      </div>
+    </div>
+  );
+}
+
+// Searched, found first, and three rings fill up: fast, secure, up to date.
+function Health() {
+  return (
+    <div className="sv-scene" style={{ "--P": "7s" } as Vars}>
+      <div className="absolute left-[25px] top-2 flex w-[280px] items-center gap-2.5 rounded-full bg-white px-4 py-2.5 shadow-[0_12px_28px_-10px_rgba(0,0,0,0.6)]">
+        <Search size={14} aria-hidden="true" className="text-slate-500" />
+        <span className="sv-typebar block h-2 w-[110px] origin-left rounded-full bg-slate-300" />
+      </div>
+      <div className="sv-result absolute left-[25px] top-[62px] flex w-[280px] items-center gap-3 rounded-xl bg-white p-3 shadow-[0_18px_40px_-14px_rgba(16,185,129,0.7)] ring-2 ring-emerald-400">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500"><span className="h-3.5 w-3.5 rounded bg-white/90" /></span>
+        <div className="flex-1 space-y-1.5">
+          <Bar w="60%" tone="bg-indigo-500" />
+          <Bar w="90%" tone="bg-slate-200" h="h-1.5" />
+        </div>
+        <span className="sv-pop flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-[13px] text-white" style={{ "--d": "1.9s" } as Vars}>1</span>
+      </div>
+      <div className="absolute bottom-3 left-0 flex w-full justify-center gap-6">
+        {[
+          { I: Zap, c: "text-amber-500" },
+          { I: Shield, c: "text-indigo-500" },
+          { I: RefreshCw, c: "text-sky-500" },
+        ].map(({ I, c }, i) => (
+          <span key={i} className="relative flex h-14 w-14 items-center justify-center">
+            <span className={`flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg ${c}`}>
+              <I size={17} aria-hidden="true" />
+            </span>
+            <svg viewBox="0 0 48 48" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="3" />
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#34d399" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="132" strokeDashoffset="6" className="sv-fill" style={{ animationDelay: `${i * 0.25}s` }} />
+            </svg>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Files, email and sheets fly into the AI, and one checked answer comes out.
+function Docs() {
+  const ai: [number, number] = [150, 120];
+  const files: { I: LucideIcon; c: string }[] = [
+    { I: FileText, c: "text-rose-500" },
+    { I: Mail, c: "text-sky-500" },
+    { I: Table, c: "text-emerald-500" },
+  ];
+  return (
+    <div className="sv-scene" style={{ "--P": "8s" } as Vars}>
+      <svg viewBox="0 0 330 240" className="absolute inset-0 h-full w-full" aria-hidden="true">
+        {[66, 120, 174].map((y) => (
+          <line key={y} x1="48" y1={y} x2={ai[0]} y2={ai[1]} stroke="#c4b5fd" strokeOpacity="0.5" strokeWidth="1.5" strokeDasharray="2 4" className="sc-flow" />
+        ))}
+        <line x1={ai[0]} y1={ai[1]} x2="214" y2="120" stroke="#c4b5fd" strokeOpacity="0.6" strokeWidth="1.5" strokeDasharray="2 4" className="sc-flow" />
+      </svg>
+      {files.map(({ I, c }, i) => (
+        <span key={i} className="sv-fly absolute" style={{ left: 22, top: 66 + i * 54, animationDelay: `${i * 0.12}s` }}>
+          <Tile Icon={I} color={c} />
+        </span>
+      ))}
+      <span className="absolute -translate-x-1/2 -translate-y-1/2" style={at(ai[0], ai[1])}>
+        <span className="sv-pulse flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-[0_0_40px_-4px_rgba(167,139,250,0.95)]" style={{ "--d": "1.6s" } as Vars}>
+          <Sparkles size={22} aria-hidden="true" />
+        </span>
+      </span>
+      <div className="sv-ans absolute left-[214px] top-[68px] w-[108px] rounded-xl bg-white p-3 shadow-[0_18px_40px_-12px_rgba(139,92,246,0.7)]">
+        <Tick className="sv-pop h-7 w-7 !ring-0 [&>svg]:h-4 [&>svg]:w-4" style={{ "--d": "3.1s" } as Vars} />
+        <div className="mt-2.5 space-y-1.5">
+          <span className="sv-line block h-1.5 w-full origin-left rounded-full bg-slate-700" style={{ "--i": 0 } as Vars} />
+          <span className="sv-line block h-1.5 w-3/4 origin-left rounded-full bg-slate-300" style={{ "--i": 1 } as Vars} />
+        </div>
+        <span className="mt-2.5 flex w-fit items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-slate-500">
+          <FileText size={9} aria-hidden="true" className="text-rose-500" />
+          <Bar w="14px" tone="bg-slate-300" h="h-1" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- the services ---------- */
+
+type Item = {
+  name: string;
+  body: string;
+  Visual: React.ComponentType;
+  ai?: boolean;
+  span: string; // desktop grid placement
+  side?: boolean; // wide tiles put the words beside the picture
+  zoom: number; // desktop scale of the 330 x 240 picture
+  wash: string; // rgb of the colour glowing in the tile
+};
+
+// A short list, on purpose: one clear specialty, not a menu of every possible job. Build and AI work
+// alternate so the offer reads as one. Laid out as a bento of different sized tiles, like expo.dev:
+// one big idea per tile, shown large, with a short title.
+const items: Item[] = [
+  { name: "Websites and web apps", body: "Sites, online stores and web apps that turn visitors into customers.", Visual: Site, span: "lg:col-span-5 lg:row-span-2", zoom: 1.45, wash: "99, 102, 241" },
+  { name: "AI assistants and chatbots", body: "Assistants that answer your customers using your own content.", Visual: Chat, ai: true, span: "lg:col-span-7", side: true, zoom: 1.15, wash: "139, 92, 246" },
+  { name: "Mobile apps", body: "Native and cross platform apps for iOS and Android.", Visual: Phone, span: "lg:col-span-3", zoom: 0.82, wash: "244, 114, 182" },
+  { name: "Workflow automation", body: "Repetitive work handled quietly by AI in the background.", Visual: Flow, ai: true, span: "lg:col-span-4", zoom: 1, wash: "217, 70, 239" },
+  { name: "Integrations and APIs", body: "Payments, CRMs and messaging connected into one flow.", Visual: Connect, span: "lg:col-span-5", zoom: 1, wash: "56, 189, 248" },
+  { name: "AI inside your product", body: "Search, summaries and recommendations built in.", Visual: InProduct, ai: true, span: "lg:col-span-7", side: true, zoom: 1.15, wash: "167, 139, 250" },
+  { name: "Speed, search and care", body: "Fast, found on search, updated and secure.", Visual: Health, span: "lg:col-span-7", side: true, zoom: 1.15, wash: "52, 211, 153" },
+  { name: "Document and data intelligence", body: "PDFs, emails and records turned into answers.", Visual: Docs, ai: true, span: "lg:col-span-5", zoom: 1, wash: "251, 191, 36" },
+];
+
+export default function Services() {
+  const reduce = useReducedMotion();
+  const listRef = useRef<HTMLUListElement>(null);
+
+  // Each card's loop runs only while that card is on screen.
+  useEffect(() => {
+    const ul = listRef.current;
+    if (!ul) return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => ((e.target as HTMLElement).dataset.run = e.isIntersecting ? "true" : "false")),
+      { rootMargin: "60px" }
+    );
+    ul.querySelectorAll(".sv-card").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section id="services" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
+      <div className="relative z-10 mx-auto max-w-[1200px]">
+        <h2 className="mb-10 text-center text-4xl leading-[1.1] tracking-tight text-white md:mb-12 md:text-5xl">
+          What you can stop worrying about.
+        </h2>
+
+        <ul ref={listRef} className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2 md:gap-5 lg:auto-rows-[340px] lg:grid-cols-12 lg:gap-5">
+          {items.map((it, i) => (
+            <motion.li
+              key={it.name}
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.55, delay: (i % 3) * 0.08, ease: "easeOut" }}
+              className={`sv-card group/t relative flex list-none flex-col overflow-hidden rounded-[28px] bg-[#111637] transition-colors duration-300 hover:bg-[#151b42] lg:rounded-[32px] ${it.span} ${it.side ? "lg:flex-row" : ""}`}
+              style={{ ["--zoom" as string]: it.zoom } as React.CSSProperties}
+            >
+              {/* The colour glowing in this tile */}
+              <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ backgroundImage: `radial-gradient(ellipse 70% 60% at ${it.side ? "85% 20%" : "75% 15%"}, rgba(${it.wash}, 0.30), transparent 70%), radial-gradient(ellipse 80% 50% at 50% 110%, rgba(${it.wash}, 0.18), transparent 75%)` }} />
+
+              {/* One big picture */}
+              <div className={`relative flex min-h-[260px] flex-1 items-center justify-center overflow-hidden lg:min-h-0 ${it.side ? "lg:order-2" : ""}`}>
+                <div aria-hidden="true" className="flex items-center justify-center lg:[zoom:var(--zoom)]">
+                  <it.Visual />
+                </div>
+              </div>
+
+              {/* One short title */}
+              <div className={`relative px-6 pb-6 pt-3 md:px-8 md:pb-8 ${it.side ? "lg:order-1 lg:flex lg:w-[40%] lg:flex-col lg:justify-end lg:pt-8" : ""}`}>
+                <h3 className="text-[26px] leading-[1.08] tracking-[-0.02em] text-white md:text-[32px]">{it.name}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-slate-400 transition-colors duration-300 group-hover/t:text-slate-300">{it.body}</p>
+              </div>
+            </motion.li>
+          ))}
+        </ul>
+
+        {/* The way in: no card, just the line and two actions */}
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="relative mx-auto mt-16 flex max-w-2xl flex-col items-center text-center md:mt-24"
+        >
+          <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-72 w-[min(640px,100vw)] -translate-x-1/2 -translate-y-1/2" style={{ backgroundImage: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(99, 102, 241, 0.16), transparent 100%)" }} />
+          <h3 className="text-balance text-4xl leading-[1.1] tracking-tight text-white md:text-5xl">Bring me the problem.</h3>
+          <p className="mt-4 text-pretty text-base leading-relaxed text-slate-300 md:text-lg">I will come back with what to build, and what it takes.</p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link href="#contact" className="btn-compact btn-compact-light gap-2 px-5">
+              Start a project
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+            <a href="https://calendly.com/davidtmoses5/30min" target="_blank" rel="noopener noreferrer" className="btn-compact btn-compact-ghost px-5">
+              Book a call
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

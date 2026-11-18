@@ -1,198 +1,203 @@
 "use client";
 
-import React from "react";
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import { Terminal, ArrowRight, Code2, Cpu, Globe, Smartphone, ShoppingBag, Palette, Zap } from "lucide-react";
-import Link from "next/link";
+// Earlier versions: components/archive/TechStack*.tsx (the latest: TechStackPlatesAndChips.tsx,
+// a 3D plate stack with chip rows).
 
-const technologies = [
+import React, { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+
+// Logos are the official marks from Simple Icons (CC0), stored in /public/tech and drawn as masks so
+// they take the colour of the text. Names only: no levels or scores.
+type Tool = { name: string; logo?: string; wide?: boolean; glyph?: "tokens" | "agents" | "retrieval" | "flow" | "bag" };
+type Group = { job: string; note?: string; span: string; cols: string; rgb: string; tools: Tool[] };
+
+const groups: Group[] = [
   {
-    id: 1,
-    title: "Next.js & React",
-    description: "Expertise in building high-performance full-stack applications with SSR and ISR.",
-    icon: <Code2 />,
-    gradient: "from-zinc-400 to-zinc-600",
-    colSpan: "md:col-span-2",
-    level: "98%"
+    job: "Websites and apps",
+    note: "",
+    span: "lg:col-span-6",
+    cols: "grid-cols-[repeat(2,minmax(0,1fr))] sm:grid-cols-[repeat(3,minmax(0,1fr))]",
+    rgb: "99, 102, 241",
+    tools: [
+      { name: "Next.js", logo: "nextdotjs" },
+      { name: "React", logo: "react" },
+      { name: "TypeScript", logo: "typescript" },
+      { name: "Tailwind CSS", logo: "tailwindcss" },
+      { name: "Framer Motion", logo: "framer" },
+      { name: "React Native", logo: "react" },
+    ],
   },
   {
-    id: 2,
-    title: "TypeScript",
-    description: "Enforcing type-safety for scalable and maintainable enterprise codebases.",
-    icon: <Cpu />,
-    gradient: "from-blue-500 to-indigo-500",
-    colSpan: "md:col-span-1",
-    level: "92%"
+    job: "Behind the scenes",
+    note: "",
+    span: "lg:col-span-6",
+    cols: "grid-cols-[repeat(2,minmax(0,1fr))] sm:grid-cols-[repeat(3,minmax(0,1fr))]",
+    rgb: "56, 189, 248",
+    tools: [
+      { name: "Node.js", logo: "nodedotjs" },
+      { name: "Nest.js", logo: "nestjs" },
+      { name: "PostgreSQL", logo: "postgresql" },
+      { name: "Prisma", logo: "prisma" },
+      { name: "Socket.io", logo: "socketdotio" },
+      { name: "GraphQL", logo: "graphql" },
+    ],
   },
   {
-    id: 3,
-    title: "React Native",
-    description: "Developing seamless cross-platform mobile experiences for iOS and Android.",
-    icon: <Smartphone />,
-    gradient: "from-cyan-400 to-blue-500",
-    colSpan: "md:col-span-1",
-    level: "88%"
+    job: "Online stores and CMS",
+    note: "",
+    span: "lg:col-span-5",
+    cols: "grid-cols-[repeat(2,minmax(0,1fr))]",
+    rgb: "139, 92, 246",
+    tools: [
+      { name: "WooCommerce", glyph: "bag" },
+      { name: "Shopify", logo: "shopify" },
+      { name: "WordPress", logo: "wordpress" },
+      { name: "Webflow", logo: "webflow" },
+    ],
   },
   {
-    id: 4,
-    title: "Node.js & Backend",
-    description: "Architecting robust APIs and server-side logic using modern runtime environments.",
-    icon: <Globe />,
-    gradient: "from-green-500 to-emerald-600",
-    colSpan: "md:col-span-2",
-    level: "90%"
+    job: "Design and launch",
+    note: "",
+    span: "lg:col-span-3",
+    cols: "grid-cols-[repeat(1,minmax(0,1fr))]",
+    rgb: "45, 212, 191",
+    tools: [
+      { name: "Figma", logo: "figma" },
+      { name: "GitHub", logo: "github" },
+      { name: "Vercel", logo: "vercel" },
+    ],
   },
   {
-    id: 5,
-    title: "E-commerce Ecosystems",
-    description: "Specialized in Shopify and WordPress/WooCommerce for high-conversion retail.",
-    icon: <ShoppingBag />,
-    gradient: "from-purple-500 to-pink-500",
-    colSpan: "md:col-span-1",
-    level: "95%"
-  },
-  {
-    id: 6,
-    title: "Design & CMS",
-    description: "Bridging the gap between Figma designs and live Webflow deployments.",
-    icon: <Palette />,
-    gradient: "from-orange-500 to-red-500",
-    colSpan: "md:col-span-2",
-    level: "90%"
+    job: "AI and automation",
+    note: "",
+    span: "lg:col-span-4",
+    cols: "grid-cols-[repeat(2,minmax(0,1fr))]",
+    rgb: "217, 70, 239",
+    tools: [
+      { name: "Language models", glyph: "tokens" },
+      { name: "AI agents", glyph: "agents" },
+      { name: "Document search", glyph: "retrieval" },
+      { name: "Workflows", glyph: "flow" },
+    ],
   },
 ];
 
-function TechCard({ tech }: { tech: (typeof technologies)[0] }) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
+// Small drawn marks for the AI tools, which have no logo of their own.
+function Glyph({ kind }: { kind: NonNullable<Tool["glyph"]> }) {
+  const p = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, className: "h-6 w-6" };
+  if (kind === "tokens")
+    return (
+      <svg {...p} aria-hidden="true">
+        <rect x="3" y="5" width="11" height="3.5" rx="1.75" />
+        <rect x="3" y="10.25" width="18" height="3.5" rx="1.75" />
+        <rect x="3" y="15.5" width="8" height="3.5" rx="1.75" />
+      </svg>
+    );
+  if (kind === "agents")
+    return (
+      <svg {...p} aria-hidden="true">
+        <circle cx="12" cy="5.5" r="2.5" />
+        <circle cx="5.5" cy="18" r="2.5" />
+        <circle cx="18.5" cy="18" r="2.5" />
+        <path d="M10.8 7.7 6.8 15.8M13.2 7.7l4 8.1M8 18h8" />
+      </svg>
+    );
+  if (kind === "retrieval")
+    return (
+      <svg {...p} aria-hidden="true">
+        <path d="M6 3h8l4 4v6" />
+        <path d="M6 3v18h6" />
+        <circle cx="16.5" cy="17" r="3.5" />
+        <path d="m19 19.5 2 2" />
+      </svg>
+    );
+  if (kind === "bag")
+    return (
+      <svg {...p} aria-hidden="true">
+        <path d="M5 8h14l-1 12H6L5 8Z" />
+        <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
+      </svg>
+    );
   return (
-    <motion.div
-      onMouseMove={handleMouseMove}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/40 backdrop-blur-sm p-8 transition-all duration-500 hover:border-white/20 ${tech.colSpan}`}
-    >
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              450px circle at ${mouseX}px ${mouseY}px,
-              rgba(255, 255, 255, 0.05),
-              transparent 80%
-            )
-          `,
-        }}
-      />
+    <svg {...p} aria-hidden="true">
+      <rect x="3" y="4" width="7" height="7" rx="2" />
+      <rect x="14" y="13" width="7" height="7" rx="2" />
+      <path d="M10 7.5h4.5a2 2 0 0 1 2 2V13M12 16.5H8.5a2 2 0 0 1-2-2V11" />
+    </svg>
+  );
+}
 
-      <div className="relative z-10 flex h-full flex-col justify-between">
-        <div>
-          <div className={`mb-6 inline-flex rounded-2xl bg-gradient-to-br ${tech.gradient} p-0.5 shadow-lg`}>
-            <div className="flex rounded-[14px] bg-slate-950 p-3 text-white">
-              {React.cloneElement(tech.icon as React.ReactElement, { size: 24 })}
-            </div>
-          </div>
-
-          <h3 className="mb-3 text-2xl font-bold text-white tracking-tight">
-            {tech.title}
-          </h3>
-          <p className="max-w-[320px] text-sm leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors">
-            {tech.description}
-          </p>
-        </div>
-
-        <div className="mt-8 flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-              Proficiency_Level
-            </span>
-            <span className="text-white font-bold text-sm">{tech.level}</span>
-          </div>
-          <div className={`h-1 w-12 rounded-full bg-gradient-to-r ${tech.gradient} opacity-50 group-hover:w-24 group-hover:opacity-100 transition-all duration-700`}></div>
-        </div>
-      </div>
-    </motion.div>
+function Mark({ tool }: { tool: Tool }) {
+  if (tool.glyph) return <Glyph kind={tool.glyph} />;
+  const url = `url(/tech/${tool.logo}.svg)`;
+  return (
+    <span
+      aria-hidden="true"
+      className={`block h-6 bg-current ${tool.wide ? "w-10" : "w-6"}`}
+      style={{ WebkitMaskImage: url, maskImage: url, WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center", WebkitMaskSize: "contain", maskSize: "contain" }}
+    />
   );
 }
 
 export default function TechStack() {
+  const reduce = useReducedMotion();
+  const gridRef = useRef<HTMLUListElement>(null);
+  const frame = useRef(0);
+
+  // One light that follows the pointer across all the cards at once (positions written as CSS
+  // variables, once per frame). Only for devices that can hover.
+  const onMove = (e: React.PointerEvent<HTMLUListElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const { clientX, clientY } = e;
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      gridRef.current?.querySelectorAll<HTMLElement>(":scope > .spot-card").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--x", `${clientX - r.left}px`);
+        el.style.setProperty("--y", `${clientY - r.top}px`);
+      });
+    });
+  };
+
   return (
-    <section className="relative min-h-screen overflow-hidden bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 px-6 py-32" id="techstack">
-      {/* Background Glows */}
-      <div className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-purple-500/5 blur-[120px] pointer-events-none" />
+    <section id="techstack" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
+      <div className="relative z-10 mx-auto max-w-[1200px]">
+        <h2 className="mb-10 text-center text-4xl leading-[1.1] tracking-tight text-white md:mb-12 md:text-5xl">
+          Tools I trust with your business.
+        </h2>
 
-      <div className="relative z-10 mx-auto max-w-7xl">
-        {/* Centered Header Section */}
-        <div className="mb-24 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/5 bg-white/5 px-4 py-1.5"
-          >
-            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
-            <span className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-indigo-400">
-              Engine Room // Infrastructure
-            </span>
-          </motion.div>
-          
-          <h2 className="text-4xl font-bold text-white md:text-6xl tracking-tighter mb-6 leading-none">
-            Tech Stack & <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent italic">Core Tools.</span>
-          </h2>
-          
-          <p className="text-slate-400 max-w-2xl mx-auto text-base leading-relaxed">
-            I leverage a specialized selection of modern frameworks and platforms to engineer high-performance digital solutions that scale with your business.
-          </p>
-        </div>
+        <ul ref={gridRef} onPointerMove={onMove} className="spot-grid m-0 grid list-none grid-cols-1 gap-4 p-0 lg:grid-cols-12 lg:gap-5">
+          {groups.map((g, gi) => (
+            <motion.li
+              key={g.job}
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.55, delay: (gi % 3) * 0.08, ease: "easeOut" }}
+              className={`spot-card relative flex list-none flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 p-5 shadow-[0_14px_36px_-28px_rgba(0,0,0,0.55)] md:p-8 ${g.span}`}
+            >
+              <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ backgroundImage: `radial-gradient(ellipse 70% 60% at 100% 0%, rgba(${g.rgb}, 0.20), transparent 70%)` }} />
+              <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px" style={{ backgroundImage: `linear-gradient(to right, transparent, rgba(${g.rgb}, 0.7), transparent)` }} />
+              <div className="relative flex flex-col gap-1">
+                <h3 className="text-2xl text-white md:text-[28px]">{g.job}</h3>
+              </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {technologies.map((tech) => (
-            <TechCard key={tech.id} tech={tech} />
+              <ul className={`relative m-0 mt-4 grid flex-1 list-none auto-rows-fr gap-2.5 p-0 md:mt-8 ${g.cols}`}>
+                {g.tools.map((t) => (
+                  <li
+                    key={`${g.job}-${t.name}`}
+                    className={`group/t flex min-w-0 items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/55 px-4 py-3.5 text-slate-300 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:bg-slate-950/80 hover:text-white`}
+                  >
+                    <span className="transition-colors duration-300" style={{ color: `rgb(${g.rgb})` }}>
+                      <Mark tool={t} />
+                    </span>
+                    <span className="min-w-0 text-[15px] leading-tight">{t.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.li>
           ))}
-        </div>
-
-       {/* --- NEW TECH CTA --- */}
-        <div className="mt-20 relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-indigo-600/5 backdrop-blur-3xl border border-white/5 rounded-2xl"></div>
-          
-          <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="h-16 w-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
-                <Cpu className="animate-pulse" size={32} />
-              </div>
-              <div>
-                <h4 className="text-xl font-bold text-white mb-1">Custom Architecture Needed?</h4>
-                <p className="text-slate-400 text-sm">I can adapt to your specific enterprise stack or legacy system requirements.</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 w-full md:w-auto">
-              <a 
-                href="#contact" 
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-xl font-bold transition-all"
-              >
-                Start Build
-                <Zap size={16} fill="currentColor" />
-              </a>
-              {/* <a 
-                href="https://github.com" 
-                target="_blank"
-                className="p-4 rounded-xl border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all"
-              >
-                <ExternalLink size={20} />
-              </a> */}
-            </div>
-          </div>
-        </div>
+        </ul>
       </div>
     </section>
   );

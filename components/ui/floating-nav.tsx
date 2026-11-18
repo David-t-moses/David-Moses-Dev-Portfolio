@@ -49,7 +49,9 @@ export const FloatingNav = ({
           }
         });
       },
-      { threshold: 0.5 } // triggers when half of a section is visible
+      // The section crossing a thin band at the middle of the viewport is active.
+      // A visibility ratio fails for sections taller than two screens (Projects).
+      { rootMargin: "-45% 0px -54% 0px", threshold: 0 }
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -77,7 +79,7 @@ export const FloatingNav = ({
         <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
 
         {/* Nav container */}
-        <nav className="relative backdrop-blur-2xl bg-slate-900/80 border border-white/10 rounded-2xl px-6 py-3 shadow-2xl">
+        <nav className="relative backdrop-blur-md bg-slate-900/90 border border-white/10 rounded-2xl px-6 py-3 shadow-2xl">
           <ul className="flex items-center gap-1">
             {navItems.map((navItem, idx) => {
               const sectionId = navItem.link.replace("#", "");

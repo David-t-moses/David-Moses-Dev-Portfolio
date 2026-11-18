@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter } from "next/font/google";
+import { Inter, DM_Sans, Caveat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -8,6 +8,21 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+  variable: "--font-dm-sans",
+});
+
+// Handwriting for the decorative notebook sketch only.
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+  variable: "--font-hand",
 });
 
 export const metadata: Metadata = {
@@ -140,7 +155,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} font-inter antialiased h-screen w-full overflow-x-hidden`}
+        className={`${inter.variable} ${dmSans.variable} ${caveat.variable} font-inter antialiased h-screen w-full overflow-x-hidden`}
       >
         {children}
         <Toaster />

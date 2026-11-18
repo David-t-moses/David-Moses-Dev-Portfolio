@@ -83,6 +83,13 @@ html {
   }
 }
 
+/* Typography: regular DM Sans for headings, Inter for everything else.
+   Weights stay at 400 for headings and body, 500 at most for controls. */
+h1, h2, h3, h4 {
+  font-family: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  font-weight: 400;
+}
+
 /* Improved text rendering */
 body {
   text-rendering: optimizeLegibility;
@@ -90,12 +97,47 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Solid text only: decorative text gradients are not used (see PORTFOLIO_DESIGN_RULES.md) */
+
+/* Shared compact text action button.
+   Visible height: 38px (40px with a border). Hit area grows to 44px via ::after
+   without changing layout, so neighbouring buttons (gap >= 12px) do not overlap. */
+@layer components {
+  .btn-compact {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 0.5rem;
+    padding-inline: 1.375rem;
+    font-size: 0.9375rem;
+    line-height: 1.375rem;
+    font-weight: 500;
+    border-radius: 0.75rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
+  }
+  .btn-compact::after {
+    content: "";
+    position: absolute;
+    inset-block: -3px;
+    inset-inline: 0;
+  }
+  .btn-compact:hover { transform: translateY(-1px); }
+  .btn-compact:active { transform: translateY(0); filter: brightness(0.94); }
+  .btn-compact:focus-visible { outline: 2px solid #a5b4fc; outline-offset: 3px; }
+  .btn-compact:disabled,
+  .btn-compact[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .btn-compact-primary { background-image: linear-gradient(to right, #6366f1, #9333ea); color: #fff; box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3); }
+  .btn-compact-primary:hover { box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5); }
+  .btn-compact-ghost { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+  .btn-compact-ghost:hover { background: rgba(255, 255, 255, 0.1); }
+  .btn-compact-light { background: #fff; color: #0f172a; }
+  .btn-compact-light:hover { background: #e2e8f0; }
+  .btn-compact-indigo { background: #4f46e5; color: #fff; }
+  .btn-compact-indigo:hover { background: #6366f1; }
 }
 
 /* Glassmorphism utility */
@@ -127,3 +169,329 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Hero editor caret: restrained blink, static under reduced motion */
+.editor-caret { animation: caret-blink 1.1s steps(1) infinite; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .editor-caret { animation: none; }
+}
+
+/* About: drawn notebook and process. The section gets .about-armed only when
+   motion is allowed, then .about-drawn once when it first enters view.
+   Without .about-armed (reduced motion, or before hydration) all is visible. */
+.notebook .hand { font-family: var(--font-hand), "Caveat", cursive; }
+@media (max-width: 639px) {
+  .notebook .ink { stroke-width: 3.6; }
+  .notebook .code-only { display: none; }
+  .notebook .note-group { transform: translateY(-120px); }
+  .notebook .note-text { font-size: 40px; }
+}
+.about-armed .stroke { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.about-armed .ink-text { opacity: 0; }
+.about-armed .proc { opacity: 0.25; }
+.about-armed .proc-arrow { transform: scaleY(0); transform-origin: top; }
+.about-armed.about-drawn .stroke { stroke-dashoffset: 0; transition: stroke-dashoffset 0.9s ease-out var(--d, 0s); }
+.about-armed.about-drawn .ink-text { opacity: 1; transition: opacity 0.8s ease var(--d, 0s); }
+.about-armed.about-drawn .proc { opacity: 1; transition: opacity 0.6s ease var(--d, 0s); }
+.about-armed.about-drawn .proc-arrow { transform: scaleY(1); transition: transform 0.4s ease var(--d, 0s); }
+@media (prefers-reduced-motion: reduce) {
+  .about-armed .stroke { stroke-dashoffset: 0; transition: none; }
+  .about-armed .ink-text, .about-armed .proc { opacity: 1; transition: none; }
+  .about-armed .proc-arrow { transform: none; transition: none; }
+}
+
+/* About monitor: appears gently, wireframe draws, the primary action gets one
+   small emphasis, then everything holds. Armed only when motion is allowed. */
+.monitor-in { transition: opacity 0.8s ease, transform 0.8s ease; }
+.about-armed .monitor-in { opacity: 0; transform: translateY(14px); }
+.about-armed.about-drawn .monitor-in { opacity: 1; transform: none; }
+.about-armed.about-drawn .mon-cta {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cta-pop 0.8s ease 3s both;
+}
+@keyframes cta-pop { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.07); } }
+@media (max-width: 639px) {
+  .monitor .ink { stroke-width: 4; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-armed .monitor-in { opacity: 1; transform: none; transition: none; }
+  .about-armed.about-drawn .mon-cta { animation: none; }
+}
+
+/* Logo strip: two slow rows. Each track holds two identical groups and moves by
+   exactly one group width, so the loop is seamless. */
+/* No edge fade: the rows run clean off both sides of the screen. */
+.marquee-track { display: flex; width: max-content; will-change: transform; }
+.marquee-group { display: flex; flex-shrink: 0; align-items: center; justify-content: space-around; gap: 4.5rem; padding-inline: 2.25rem; min-width: 100vw; margin: 0; list-style: none; height: 44px; }
+.marquee-left { animation: marquee-l 40s linear infinite; }
+.marquee-right { animation: marquee-r 40s linear infinite; }
+@keyframes marquee-l { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@keyframes marquee-r { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+.marquee[data-paused="true"] .marquee-track { animation-play-state: paused; }
+@media (max-width: 639px) {
+  .marquee-group { gap: 3rem; padding-inline: 1.5rem; min-width: 200vw; }
+  .marquee { padding-block: 1.5rem; gap: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee { mask-image: none; -webkit-mask-image: none; }
+  .marquee-track { animation: none; width: auto; justify-content: center; }
+  .marquee-group { min-width: 0; flex-wrap: wrap; justify-content: center; height: auto; row-gap: 1.25rem; }
+  .marquee-group[aria-hidden="true"] { display: none; }
+}
+
+/* Projects showcase: the card carousel is driven by Web Animations (see Projects.tsx);
+   only the navigation dots need styling here. */
+.showcase-dot {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 36px; background: none; border: 0; padding: 0;
+}
+.showcase-dot:focus-visible { outline: 2px solid #a5b4fc; outline-offset: -2px; border-radius: 9999px; }
+
+/* Projects (curated layout): one brief entrance for the featured cards, and a soft pop for
+   the optional grid. Armed from JavaScript only when motion is allowed. */
+.pj-armed .pj-reveal { opacity: 0; transform: translateY(14px); }
+.pj-armed.pj-in .pj-reveal { opacity: 1; transform: none; transition: opacity 0.6s ease var(--d, 0s), transform 0.6s ease var(--d, 0s), border-color 0.3s; }
+.pj-pop { animation: pj-pop 0.4s ease both; }
+@keyframes pj-pop { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .pj-armed .pj-reveal { opacity: 1; transform: none; }
+  .pj-pop { animation: none; }
+}
+
+/* Projects cards: slanted screenshot that eases toward flat on hover or focus. */
+.pj-tilt {
+  /* Anchored at the bottom right so the right end stays fully in view while the left side
+     recedes in perspective. */
+  transform: perspective(900px) rotateY(11deg) rotateX(9deg);
+  transform-origin: 100% 100%;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pj-card:hover .pj-tilt,
+.pj-tilt:focus-within { transform: perspective(900px) rotateY(4deg) rotateX(3deg) translateY(-4px); }
+@media (prefers-reduced-motion: reduce) { .pj-tilt { transition: none; } }
+
+/* Projects cards: glow behind the slanted screenshot, a little stronger when the card is hovered. */
+.pj-glow {
+  background:
+    linear-gradient(to top, rgba(167, 139, 250, 0.55) 0%, rgba(129, 140, 248, 0.32) 38%, transparent 78%),
+    radial-gradient(ellipse 80% 50% at 55% 30%, rgba(99, 102, 241, 0.6), rgba(124, 58, 237, 0.3) 48%, transparent 76%),
+    radial-gradient(ellipse 45% 40% at 8% 42%, rgba(56, 189, 248, 0.2), transparent 70%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 55%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 55%);
+  opacity: 0.9;
+  transition: opacity 0.5s ease;
+}
+.pj-card:hover .pj-glow { opacity: 1; }
+
+/* Motion: the glow breathes slowly, and a light sweep crosses the screenshot on hover. */
+@media (prefers-reduced-motion: no-preference) {
+  .pj-glow { animation: pj-breathe 6s ease-in-out infinite; }
+  .pj-card:nth-child(2) .pj-glow { animation-delay: -2s; }
+  .pj-card:nth-child(3) .pj-glow { animation-delay: -4s; }
+  @keyframes pj-breathe { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+  .pj-shot { overflow: hidden; }
+  .pj-shot::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%);
+    transform: translateX(-120%);
+  }
+  .pj-card:hover .pj-shot::after { transform: translateX(120%); transition: transform 0.9s ease; }
+}
+
+/* Approach: a light travels along the path above the steps (desktop, motion allowed only). */
+@media (prefers-reduced-motion: no-preference) {
+  .path-light { animation: path-travel 7s ease-in-out infinite; }
+  @keyframes path-travel { 0% { left: 24px; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { left: calc(75% + 24px); opacity: 0; } }
+}
+
+/* Approach scenes: faint dot grid behind each drawing, plus small ambient loops. */
+.scene-grid {
+  background-image: radial-gradient(rgba(165, 180, 252, 0.16) 1px, transparent 1.2px);
+  background-size: 16px 16px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sc-dot { animation: sc-blink 1.6s ease-in-out infinite; }
+  .sc-d2 { animation-delay: 0.25s; }
+  .sc-d3 { animation-delay: 0.5s; }
+  @keyframes sc-blink { 0%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+  .sc-flow { animation: sc-flow 3.2s linear infinite; }
+  @keyframes sc-flow { to { stroke-dashoffset: -96; } }
+  .sc-ring { transform-box: fill-box; transform-origin: center; animation: sc-ring 2.4s ease-out infinite; }
+  @keyframes sc-ring { 0% { transform: scale(0.6); opacity: 0.5; } 100% { transform: scale(1.8); opacity: 0; } }
+  .sc-caret { animation: sc-caret 1.1s steps(1) infinite; }
+  @keyframes sc-caret { 50% { opacity: 0; } }
+}
+
+/* Approach: scenes keep a constant line weight when scaled up; the active step's rail fills over time. */
+.scene-svg * { vector-effect: non-scaling-stroke; }
+.step-bar { animation: step-fill linear forwards; }
+@keyframes step-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+/* Tech Stack: chip marquee (AI stack). Chips are close together; the loop copy is hidden for reduced motion. */
+.marquee-chips .marquee-group { gap: 0.75rem; padding-inline: 0.375rem; height: auto; justify-content: flex-start; min-width: 100vw; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-chips .marquee-dup { display: none; }
+}
+
+/* Services: AI cards marquee. Cards keep their own width; the loop copy is hidden for reduced motion. */
+.marquee-cards .marquee-group { gap: 1.25rem; padding-inline: 0.625rem; height: auto; align-items: stretch; justify-content: flex-start; min-width: 100vw; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-cards .marquee-dup { display: none; }
+}
+
+/* Tech Stack: one soft light follows the pointer across every card in the grid (hover devices only). */
+.spot-card::before,
+.spot-card::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity 0.35s ease;
+}
+.spot-card::before {
+  padding: 1px;
+  background: radial-gradient(380px circle at var(--x, 50%) var(--y, 50%), rgba(165, 180, 252, 0.85), transparent 65%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.spot-card::after {
+  background: radial-gradient(520px circle at var(--x, 50%) var(--y, 50%), rgba(129, 140, 248, 0.12), transparent 65%);
+}
+@media (hover: hover) {
+  .spot-grid:hover .spot-card::before,
+  .spot-grid:hover .spot-card::after { opacity: 1; }
+}
+
+/* The same pointer light on a single card (Contact). */
+.spot-solo::before,
+.spot-solo::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity 0.35s ease;
+}
+.spot-solo::before {
+  padding: 1px;
+  background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgba(165, 180, 252, 0.85), transparent 65%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.spot-solo::after { background: radial-gradient(560px circle at var(--x, 50%) var(--y, 50%), rgba(129, 140, 248, 0.10), transparent 65%); }
+@media (hover: hover) {
+  .spot-solo:hover::before, .spot-solo:hover::after { opacity: 1; }
+}
+
+/* Projects marquee: stops while the enlarged preview is open. Reduced motion shows static wrapped cards. */
+.marquee[data-preview="open"] .marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-cards .marquee-group[aria-hidden="true"] { display: none; }
+}
+
+/* ===== Services: living pictures. Fixed 330 x 240 stages; every loop shows its finished frame by default. ===== */
+.sv-scene { position: relative; width: 330px; height: 240px; flex-shrink: 0; }
+@media (max-width: 374px) { .sv-scene { transform: scale(0.82); } }
+/* Only the active tile plays; the rest show their finished picture, slightly quieter. */
+.sv-card:not([data-active="true"]) .sv-scene *, .sv-card:not([data-active="true"]) .sv-scene *::before, .sv-card:not([data-active="true"]) .sv-scene *::after { animation: none !important; }
+.sv-card .sv-scene { transition: opacity 0.4s ease; }
+.sv-card:not([data-active="true"]) .sv-scene { opacity: 0.8; }
+@media (prefers-reduced-motion: reduce) { .sv-scene * { animation: none !important; } }
+
+/* shared building blocks */
+.sv-hop { animation: sv-hop var(--P, 7s) ease-in-out infinite both; animation-delay: var(--d, 0s); opacity: 0; }
+@keyframes sv-hop { 0% { opacity: 0; transform: translate(var(--x1), var(--y1)); } 3% { opacity: 1; } 24% { opacity: 1; transform: translate(var(--x2), var(--y2)); } 28%, 100% { opacity: 0; transform: translate(var(--x2), var(--y2)); } }
+.sv-pop { animation: sv-pop var(--P, 7s) infinite both; animation-delay: var(--d, 0s); }
+@keyframes sv-pop { 0% { transform: scale(0); } 4% { transform: scale(1.3); } 8%, 62% { transform: scale(1); } 70%, 100% { transform: scale(0); } }
+.sv-pulse { animation: sv-pulse var(--P, 7s) infinite both; animation-delay: var(--d, 0s); }
+@keyframes sv-pulse { 0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.7); transform: scale(1); } 5% { transform: scale(1.1); } 14%, 100% { box-shadow: 0 0 0 20px rgba(167, 139, 250, 0); transform: scale(1); } }
+.sv-glow { animation: sv-glow var(--P, 6s) infinite both; animation-delay: var(--d, 0s); }
+@keyframes sv-glow { 0% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0); } 4% { box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.7), 0 0 24px 4px rgba(129, 140, 248, 0.5); } 16%, 100% { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0); } }
+.sv-ring { animation: sv-ring 3s ease-out infinite; }
+@keyframes sv-ring { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; } }
+.sv-line { animation: sv-line var(--P, 10s) infinite both; animation-delay: calc(var(--i, 0) * 140ms); }
+@keyframes sv-line { 0%, 34% { transform: scaleX(0); } 48%, 88% { transform: scaleX(1); } 96%, 100% { transform: scaleX(0); } }
+
+/* site */
+.sv-page { animation: sv-page 9s ease-in-out infinite; }
+@keyframes sv-page { 0%, 42% { transform: translateY(0); } 60%, 78% { transform: translateY(-64px); } 94%, 100% { transform: translateY(0); } }
+.sv-cursor { animation: sv-cursor 9s ease-in-out infinite; }
+@keyframes sv-cursor { 0% { opacity: 0; transform: translate(240px, 150px); } 6% { opacity: 1; transform: translate(240px, 150px); } 22% { transform: translate(44px, 96px); } 25% { transform: translate(44px, 96px) scale(0.8); } 28% { transform: translate(44px, 96px) scale(1); } 40% { opacity: 1; transform: translate(170px, 130px); } 46%, 100% { opacity: 0; transform: translate(170px, 130px); } }
+.sv-cta { animation: sv-cta 9s ease-in-out infinite; }
+@keyframes sv-cta { 0%, 23% { transform: scale(1); box-shadow: 0 0 0 0 rgba(129, 140, 248, 0); } 25% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.7); } 32%, 100% { transform: scale(1); box-shadow: 0 0 0 10px rgba(129, 140, 248, 0); } }
+.sv-badge { animation: sv-badge 9s infinite; }
+@keyframes sv-badge { 0%, 25% { transform: scale(1); } 29% { transform: scale(2); } 34%, 100% { transform: scale(1); } }
+.sv-toast { animation: sv-toast 9s infinite; }
+@keyframes sv-toast { 0%, 28% { opacity: 0; transform: translateY(-12px); } 34%, 70% { opacity: 1; transform: translateY(0); } 76%, 100% { opacity: 0; transform: translateY(-12px); } }
+.sv-bar { transform-origin: bottom; animation: sv-bar 9s infinite; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes sv-bar { 0%, 28% { transform: scaleY(0.15); } 44%, 88% { transform: scaleY(1); } 96%, 100% { transform: scaleY(0.15); } }
+
+/* chat */
+.sv-m1 { animation: sv-m1 10s infinite; }
+@keyframes sv-m1 { 0%, 4% { opacity: 0; transform: translateY(8px); } 10%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: translateY(-4px); } }
+.sv-typing { animation: sv-typing 10s infinite; opacity: 0; }
+@keyframes sv-typing { 0%, 14% { opacity: 0; } 18%, 30% { opacity: 1; } 34%, 100% { opacity: 0; } }
+.sv-m2 { animation: sv-m2 10s infinite; }
+@keyframes sv-m2 { 0%, 32% { opacity: 0; transform: translateY(8px); } 38%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+.sv-tick { animation: sv-tickpop 10s infinite; }
+@keyframes sv-tickpop { 0%, 48% { transform: scale(0); } 52% { transform: scale(1.3); } 56%, 90% { transform: scale(1); } 96%, 100% { transform: scale(0); } }
+.sv-chip { animation: sv-chip 10s infinite; }
+@keyframes sv-chip { 0%, 54% { opacity: 0; transform: scale(0.8); } 60%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+
+/* phones */
+.sv-float { animation: sv-float 5s ease-in-out infinite alternate; }
+@keyframes sv-float { from { transform: translateY(-5px) rotate(var(--r, 0deg)); } to { transform: translateY(5px) rotate(var(--r, 0deg)); } }
+.sv-route { stroke-dasharray: 110; animation: sv-route 8s ease-in-out infinite; }
+@keyframes sv-route { 0% { stroke-dashoffset: 110; } 60%, 90% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 110; } }
+.sv-pin { animation: sv-pin 8s ease-in-out infinite; offset-rotate: 0deg; }
+@keyframes sv-pin { 0% { offset-distance: 0%; opacity: 1; } 60%, 90% { offset-distance: 100%; opacity: 1; } 96%, 100% { offset-distance: 0%; opacity: 0; } }
+.sv-progress { animation: sv-progress 8s ease-in-out infinite; }
+@keyframes sv-progress { 0% { transform: scaleX(0.08); } 60%, 90% { transform: scaleX(1); } 100% { transform: scaleX(0.08); } }
+.sv-feed { animation: sv-feed 7s ease-in-out infinite alternate; }
+@keyframes sv-feed { from { transform: translateY(0); } to { transform: translateY(-190px); } }
+
+/* product, health, documents */
+.sv-grow { animation: sv-grow 8s infinite both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes sv-grow { 0% { transform: scaleY(0.12); } 12%, 86% { transform: scaleY(1); } 95%, 100% { transform: scaleY(0.12); } }
+.sv-hl { animation: sv-grow 8s infinite both, sv-hl 8s infinite; animation-delay: calc(var(--i, 0) * 70ms), 0s; }
+@keyframes sv-hl { 0%, 34% { filter: brightness(0.9); } 42%, 82% { filter: brightness(1.08); } 92%, 100% { filter: brightness(0.75); } }
+.sv-note { animation: sv-note 8s infinite; }
+@keyframes sv-note { 0%, 38% { opacity: 0; transform: translateY(10px) scale(0.95); } 46%, 84% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: translateY(6px); } }
+.sv-spin { animation: sv-spin 6s linear infinite; }
+@keyframes sv-spin { to { transform: rotate(360deg); } }
+.sv-typebar { animation: sv-typebar 7s infinite; }
+@keyframes sv-typebar { 0% { transform: scaleX(0); } 14%, 90% { transform: scaleX(1); } 96%, 100% { transform: scaleX(0); } }
+.sv-result { animation: sv-result 7s infinite; }
+@keyframes sv-result { 0%, 16% { opacity: 0; transform: translateY(18px); } 26%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: translateY(8px); } }
+.sv-fill { animation: sv-fill 7s ease-in-out infinite both; }
+@keyframes sv-fill { 0%, 32% { stroke-dashoffset: 126; } 52%, 88% { stroke-dashoffset: 6; } 95%, 100% { stroke-dashoffset: 126; } }
+.sv-fly { animation: sv-fly 8s ease-in-out infinite both; }
+@keyframes sv-fly { 0%, 6% { opacity: 1; transform: translateY(-50%); } 22% { opacity: 0; transform: translate(74px, -50%) scale(0.4); } 84% { opacity: 0; transform: translate(74px, -50%) scale(0.4); } 96%, 100% { opacity: 1; transform: translateY(-50%); } }
+.sv-ans { animation: sv-ans 8s infinite; }
+@keyframes sv-ans { 0%, 26% { opacity: 0; transform: scale(0.92); } 34%, 88% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+
+/* Services, realistic pass: real screenshots, real words that write themselves. */
+.sv-shot { animation: sv-shot 9s ease-in-out infinite; }
+@keyframes sv-shot { 0%, 8% { transform: translateY(0); } 42%, 62% { transform: translateY(-45px); } 94%, 100% { transform: translateY(0); } }
+.sv-write { animation: sv-write 10s infinite both; animation-delay: calc(var(--i, 0) * 450ms); }
+@keyframes sv-write { 0%, 36% { clip-path: inset(0 100% 0 0); } 46%, 88% { clip-path: inset(0 0 0 0); } 96%, 100% { clip-path: inset(0 100% 0 0); } }
+.sv-type { animation: sv-type 7s steps(20, end) infinite both; }
+@keyframes sv-type { 0% { clip-path: inset(0 100% 0 0); } 14%, 90% { clip-path: inset(0 0 0 0); } 96%, 100% { clip-path: inset(0 100% 0 0); } }
+.sv-notif { animation: sv-notif 8s infinite; }
+@keyframes sv-notif { 0%, 30% { opacity: 0; transform: translateY(-16px); } 38%, 80% { opacity: 1; transform: none; } 88%, 100% { opacity: 0; transform: translateY(-10px); } }
+.sv-feed2 { animation: sv-feed2 8s ease-in-out infinite alternate; }
+@keyframes sv-feed2 { from { transform: translateY(-196px); } to { transform: translateY(0); } }
+.sv-ringhl { animation: sv-ringhl 8s infinite; }
+@keyframes sv-ringhl { 0%, 36% { opacity: 0; box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); } 44% { opacity: 1; box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.25); } 60%, 80% { opacity: 1; box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); } 90%, 100% { opacity: 0; } }
+.sv-docpulse { animation: sv-docpulse 8s infinite both; }
+@keyframes sv-docpulse { 0%, 6% { background-color: rgba(253, 230, 138, 0.2); } 14%, 70% { background-color: rgba(253, 230, 138, 1); } 90%, 100% { background-color: rgba(253, 230, 138, 0.2); } }
+
+/* Services, simple pictures: smaller stage, a gentle idle for the one active card. */
+.sv-scene.sx { width: 280px; height: 220px; }
+
+/* Projects marquee: kept inside the page width, with a soft fade at both ends. */
+
+@media (prefers-reduced-motion: reduce) { .marquee-soft { -webkit-mask-image: none; mask-image: none; } }
+
+/* Projects marquee: both ends melt away softly (the light blue glow sits behind). */
+.marquee-soft { -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.03) 0.9%, rgba(0,0,0,0.1) 2.25%, rgba(0,0,0,0.25) 3.6%, rgba(0,0,0,0.45) 4.95%, rgba(0,0,0,0.68) 6.3%, rgba(0,0,0,0.88) 7.65%, #000 9%, #000 91%, rgba(0,0,0,0.88) 92.35%, rgba(0,0,0,0.68) 93.7%, rgba(0,0,0,0.45) 95.05%, rgba(0,0,0,0.25) 96.4%, rgba(0,0,0,0.1) 97.75%, rgba(0,0,0,0.03) 99.1%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.03) 0.9%, rgba(0,0,0,0.1) 2.25%, rgba(0,0,0,0.25) 3.6%, rgba(0,0,0,0.45) 4.95%, rgba(0,0,0,0.68) 6.3%, rgba(0,0,0,0.88) 7.65%, #000 9%, #000 91%, rgba(0,0,0,0.88) 92.35%, rgba(0,0,0,0.68) 93.7%, rgba(0,0,0,0.45) 95.05%, rgba(0,0,0,0.25) 96.4%, rgba(0,0,0,0.1) 97.75%, rgba(0,0,0,0.03) 99.1%, transparent 100%); }
+@media (prefers-reduced-motion: reduce) { .marquee-soft { -webkit-mask-image: none; mask-image: none; } }

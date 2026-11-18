@@ -1,365 +1,184 @@
-"use client"
+"use client";
 
-import React, { useState } from "react";
+// Earlier versions: components/archive/ContactBeforeBlend.tsx (form), ContactChannelTiles.tsx (tiles),
+// ContactEditorialList.tsx (large rows).
 
-export default function PremiumContact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [error, setError] = useState("");
+import React from "react";
+import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
+import { contact } from "@/lib/contact";
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+type Reply = { key: string; title: string; line: string; href: string; external: boolean; primary?: boolean; mark: "calendar" | "mail" | "x" | "whatsapp" };
+
+// Official marks from Simple Icons (CC0) in /public/tech, drawn as masks so they take the text colour.
+function Logo({ name, className = "h-5 w-5" }: { name: string; className?: string }) {
+  const url = `url(/tech/${name}.svg)`;
+  return (
+    <span
+      aria-hidden="true"
+      className={`block bg-current ${className}`}
+      style={{ WebkitMaskImage: url, maskImage: url, WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center", WebkitMaskSize: "contain", maskSize: "contain" }}
+    />
+  );
+}
+
+const glyph = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, className: "h-5 w-5" };
+function Mark({ kind }: { kind: Reply["mark"] }) {
+  if (kind === "x") return <Logo name="x" className="h-[18px] w-[18px]" />;
+  if (kind === "whatsapp") return <Logo name="whatsapp" />;
+  if (kind === "mail")
+    return (
+      <svg {...glyph} aria-hidden="true">
+        <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+        <path d="m4 7.5 8 6 8-6" />
+      </svg>
+    );
+  return (
+    <svg {...glyph} aria-hidden="true">
+      <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </svg>
+  );
+}
+
+const Arrow = () => (
+  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover/r:translate-x-1" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } } };
+const item = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.2, 0.7, 0.2, 1] as const } } };
+
+
+export default function Contact() {
+  const reduce = useReducedMotion();
+  // The pointer light, as on Tech Stack, on this one card.
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--x", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError("");
+  const mailto = `mailto:${contact.email}?subject=${encodeURIComponent("New project enquiry")}&body=${encodeURIComponent("Hi David,\n\nI would like to talk about a project.\n\n")}`;
+  const wa = contact.whatsapp ? `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent("Hi David, I would like to talk about a project.")}` : "";
 
-    // Simulate API call
-    setTimeout(() => {
-      setShowSuccessModal(true);
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      setIsSubmitting(false);
-    }, 1500);
-  };
+  const replies: Reply[] = [];
+  if (wa) replies.push({ key: "whatsapp", title: "Message me on WhatsApp", line: "I reply personally.", href: wa, external: true, primary: true, mark: "whatsapp" });
+  replies.push({ key: "call", title: "Book a call", line: "Thirty minutes, no obligation.", href: contact.calendly, external: true, primary: !wa, mark: "calendar" });
+  replies.push(
+    { key: "email", title: "Send an email", line: contact.email, href: mailto, external: false, mark: "mail" },
+    { key: "x", title: "Connect on X", line: "Follow along and say hello.", href: contact.x, external: true, mark: "x" },
+  );
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-tr from-slate-950 via-slate-900 to-indigo-950 py-24 overflow-hidden" id="contact">
-      {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
-      </div>
+    <section id="contact" className="relative overflow-hidden px-6 pb-16 pt-20 md:px-10 md:pb-20 md:pt-28">
+      <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[38%] h-[640px] w-[min(1100px,120vw)] -translate-x-1/2 -translate-y-1/2" style={{ backgroundImage: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(99, 102, 241, 0.22), rgba(124, 58, 237, 0.08) 55%, transparent 100%)" }} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
-            <span className="text-indigo-400 text-sm font-semibold tracking-wider uppercase">
-              Get In Touch
-            </span>
-            <div className="w-12 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent rounded-full"></div>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            Let's Have a{" "}
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-              Chat
-            </span>
-          </h2>
-          <p className="text-base text-gray-400 max-w-2xl mx-auto">
-            Have a project in mind? I'd love to hear about it
-          </p>
-        </div>
+      <div className="relative z-10 mx-auto max-w-[1040px]">
+        <h2 className="mb-10 text-center text-4xl leading-[1.1] tracking-tight text-white md:mb-12 md:text-5xl">
+          Talk to me directly.
+        </h2>
 
-        {/* Two Cards Layout */}
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Left Card - Contact Info */}
-          <div className="group relative">
-            {/* Glow effect */}
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-3xl blur opacity-0 group-hover:opacity-60 transition duration-500"></div>
-
-            {/* Card content */}
-            <div className="relative backdrop-blur-2xl bg-slate-900/60 border border-white/10 rounded-3xl overflow-hidden transform transition-all duration-500 group-hover:border-white/20 h-full">
-              {/* Image section */}
-              <div className="relative h-64 md:h-80 overflow-hidden bg-gradient-to-br from-indigo-600 to-purple-600">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-32 h-32 text-white/20" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
-              </div>
-
-              {/* Info section */}
-              <div className="p-8 md:p-10 space-y-8">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    BELIEVE IN{" "}
-                    <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-                      DAVID
-                    </span>
-                  </h3>
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-gray-400 text-base uppercase tracking-wider font-semibold">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Email
-                  </div>
-                  <a
-                    href="mailto:davidtmoses5@gmail.com"
-                    className="text-white text-sm hover:text-indigo-400 transition-colors duration-200 block"
-                  >
-                    davidtmoses5@gmail.com
-                  </a>
-                </div>
-
-                {/* Working Hours */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-gray-400 text-base uppercase tracking-wider font-semibold">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Working Hours
-                  </div>
-                  <p className="text-white text-sm">9:00AM - 5:00PM</p>
-                </div>
-
-                {/* Social Links */}
-                <div className="pt-4 border-t border-white/10">
-                  <p className="text-gray-400 text-sm uppercase tracking-wider font-semibold mb-4">
-                    Connect With Me
-                  </p>
-                  <div className="flex gap-4">
-                    <a
-                      href="https://github.com/david-t-moses/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-indigo-500/20 hover:border-indigo-500/50 transition-all duration-300 hover:scale-110"
-                    >
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                      </svg>
-                    </a>
-                    <a
-                      href="https://www.linkedin.com/in/dtm-tech-solutions/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-500/20 hover:border-blue-500/50 transition-all duration-300 hover:scale-110"
-                    >
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                      </svg>
-                    </a>
-                    <a
-                      href="https://x.com/david-t-moses"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-sky-500/20 hover:border-sky-500/50 transition-all duration-300 hover:scale-110"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                      </svg>
-                    </a>
-                    <a
-                      href="https://www.facebook.com/profile.php?id=61572584128806"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-600/20 hover:border-blue-600/50 transition-all duration-300 hover:scale-110"
-                    >
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Card - Contact Form */}
-          <div className="group relative">
-            {/* Glow effect */}
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-3xl blur opacity-0 group-hover:opacity-60 transition duration-500"></div>
-
-            {/* Card content */}
-            <div className="relative backdrop-blur-2xl bg-slate-900/60 border border-white/10 rounded-3xl p-8 md:p-10 transform transition-all duration-500 group-hover:border-white/20 h-full">
-              <div className="space-y-6">
-                {/* Name Input */}
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider"
-                  >
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-5 py-4 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 hover:border-white/20"
-                    placeholder="Enter your name"
-                  />
-                </div>
-
-                {/* Email Input */}
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider"
-                  >
-                    Your Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-5 py-4 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 hover:border-white/20"
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                {/* Subject Input */}
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className="w-full px-5 py-4 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 hover:border-white/20"
-                    placeholder="What's this about?"
-                  />
-                </div>
-
-                {/* Message Textarea */}
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wider"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={5}
-                    className="w-full px-5 py-4 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 resize-none hover:border-white/20"
-                    placeholder="Tell me about your project..."
-                  />
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="relative w-full group/btn overflow-hidden transition-transform hover:scale-[1.02] active:scale-98"
-                >
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-xl blur opacity-75 group-hover/btn:opacity-100 transition duration-500"></div>
-                  <div className="relative px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-all duration-300">
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Send Message
-                        <span>→</span>
-                      </>
-                    )}
-                  </div>
-                </button>
-
-                <p className="text-sm text-gray-400 text-center pt-2">
-                  I'll get back to you within 24 hours!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => setShowSuccessModal(false)}
+        <motion.div
+          onPointerMove={onMove}
+          initial={reduce ? false : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="spot-solo relative grid gap-5 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/60 p-4 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)] md:p-6 lg:grid-cols-[330px_1fr] lg:gap-8"
         >
-          <div
-            className="relative backdrop-blur-2xl bg-slate-900/80 border border-indigo-500/30 rounded-3xl p-10 max-w-md w-full shadow-[0_0_60px_rgba(99,102,241,0.4)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Gradient glow effect */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-3xl blur opacity-30"></div>
-            
-            <div className="relative text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/50">
-                <svg
-                  className="w-10 h-10 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Message Sent Successfully!
-              </h3>
-              <p className="text-gray-300 mb-8 text-lg">
-                Thank you for reaching out! I'll get back to you within 24 hours.
+          {/* Who you are talking to */}
+          <div className="relative flex min-h-[210px] flex-col justify-end overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/30 via-violet-500/15 to-slate-900/40 lg:block lg:min-h-0">
+            <span aria-hidden="true" className="scene-grid pointer-events-none absolute inset-0 opacity-70" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3" style={{ backgroundImage: "radial-gradient(ellipse 70% 80% at 60% 100%, rgba(129, 140, 248, 0.45), transparent 75%)" }} />
+            <div className="absolute inset-y-0 right-0 w-[44%] overflow-hidden lg:relative lg:inset-auto lg:h-[300px] lg:w-full" style={{ WebkitMaskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)", maskImage: "linear-gradient(to bottom, #000 72%, transparent 100%)" }}>
+              <Image
+                src={contact.photo}
+                alt="David Moses"
+                width={409}
+                height={609}
+                priority={false}
+                sizes="(min-width: 1024px) 330px, 46vw"
+                className="absolute left-1/2 top-2 h-[150%] w-auto max-w-none -translate-x-1/2 select-none object-contain lg:top-0 lg:h-[128%]"
+              />
+            </div>
+            <div className="relative w-[62%] p-4 lg:w-full lg:p-6 lg:pt-4">
+              <p className="text-xl leading-tight text-white md:text-[22px]">David Moses</p>
+              <p className="mt-1.5 text-sm leading-snug text-slate-300">Full Stack Developer and AI Engineer</p>
+              <p className="mt-4 flex w-fit items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-400/10 px-3 py-1.5 text-[12px] text-emerald-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                Open to new projects
               </p>
-
-              <button
-                onClick={() => setShowSuccessModal(false)}
-                className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105"
-              >
-                Close
-              </button>
             </div>
           </div>
+
+          {/* The conversation: it simply appears, nothing to wait for */}
+          <motion.div
+            variants={container}
+            initial={reduce ? false : "hidden"}
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            className="relative flex min-w-0 flex-col justify-center px-1 py-2 lg:px-2"
+          >
+            <motion.div variants={item}>
+              <h3 className="text-[21px] leading-[1.25] tracking-[-0.01em] text-white md:text-[25px]">You set the goal. I build the system that gets you there and delivers real results.</h3>
+            </motion.div>
+
+            {/* How you can answer */}
+            <ul className="relative m-0 mt-7 flex list-none flex-col items-stretch gap-2.5 p-0 md:mt-8">
+              {replies.map((r) => (
+                <motion.li key={r.key} variants={item} className="list-none md:w-full">
+                  <a
+                    href={r.href}
+                    {...(r.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className={`group/r flex items-center justify-between gap-3 rounded-2xl border px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300 ${
+                      r.primary
+                        ? "border-transparent bg-white text-slate-950 hover:bg-slate-100"
+                        : "border-white/15 bg-[#10163a] text-white hover:border-white/30 hover:bg-[#151c48]"
+                    }`}
+                  >
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${r.primary ? "bg-slate-950/[0.08] text-slate-900" : "bg-white/[0.08] text-slate-200"}`}>
+                        <Mark kind={r.mark} />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[15px] leading-tight md:text-[16px]">{r.title}</span>
+                        <span className={`mt-0.5 block text-[12px] ${r.primary ? "text-slate-600" : "text-slate-300"}`}>{r.line}</span>
+                      </span>
+                    </span>
+                    <Arrow />
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+        </motion.div>
+
+        <div className="mt-12 flex flex-col items-center gap-4 text-center md:mt-14">
+          <ul className="m-0 flex list-none items-center gap-3 p-0">
+            {[
+              { label: "LinkedIn", href: contact.linkedin, logo: "linkedin" },
+              { label: "GitHub", href: contact.github, logo: "github" },
+              { label: "X", href: contact.x, logo: "x" },
+            ].map((l) => (
+              <li key={l.label} className="list-none">
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={l.label}
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-300 transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-300/50 hover:bg-indigo-400/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300"
+                >
+                  <Logo name={l.logo} className="h-[18px] w-[18px]" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-slate-500">© {new Date().getFullYear()} David Moses</p>
         </div>
-      )}
+      </div>
     </section>
   );
 }

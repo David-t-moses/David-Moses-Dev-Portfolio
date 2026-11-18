@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       fontFamily: {
         inter: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        heading: ["var(--font-dm-sans)", "DM Sans", "system-ui", "sans-serif"],
       },
       colors: {
         blue_bg: "#03186B",

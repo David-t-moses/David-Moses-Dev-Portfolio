@@ -67,7 +67,7 @@ const Button = ({
             </div>
             {question && (
               <motion.h3
-                className="text-lg font-bold mt-3 text-white leading-tight"
+                className="text-lg mt-3 text-white leading-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}

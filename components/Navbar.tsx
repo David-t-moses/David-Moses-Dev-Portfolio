@@ -24,14 +24,20 @@ export function Navbar() {
       setIsMobile(window.innerWidth < 768);
     };
 
+    // At most one scrollY read per frame; state only changes when the value flips.
+    let ticking = false;
     const handleScroll = () => {
-      // Trigger background change after 20px scroll
-      setScrolled(window.scrollY > 20);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        setScrolled(window.scrollY > 20);
+      });
     };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("resize", checkScreenSize);
@@ -56,10 +62,10 @@ export function Navbar() {
   if (isMobile) {
     const mobileNavItems = [
       { name: "Home", title: "Home", link: "/" },
-      { name: "About", title: "About Me", link: "#about" },
+      { name: "Projects", title: "My Projects", link: "#projects" },
       { name: "Services", title: "My Services", link: "#services" },
       { name: "Tech Stack", title: "Technologies", link: "#techstack" },
-      { name: "Projects", title: "My Projects", link: "#projects" },
+      { name: "Process", title: "Our Process", link: "#about" },
       { name: "Contact", title: "Contact Me", link: "#contact" },
     ];
 
@@ -109,7 +115,7 @@ export function Navbar() {
                   >
                     <div className="p-3 bg-slate-800 rounded-xl group-hover:bg-indigo-600 transition-colors">
                         {item.name === "Home" && <IconHome size={20} />}
-                        {item.name === "About" && <IconUser size={20} />}
+                        {item.name === "Process" && <IconUser size={20} />}
                         {item.name === "Services" && <IconBriefcase size={20} />}
                         {item.name === "Tech Stack" && <IconCode size={20} />}
                         {item.name === "Projects" && <IconBriefcase size={20} />}
@@ -132,10 +138,10 @@ export function Navbar() {
       <FloatingNav
         navItems={[
           { name: "Home", link: "#home" },
-          { name: "About", link: "#about" },
+          { name: "Projects", link: "#projects" },
           { name: "Services", link: "#services" },
           { name: "Tech Stack", link: "#techstack" },
-          { name: "Projects", link: "#projects" },
+          { name: "Process", link: "#about" },
           { name: "Contact", link: "#contact" },
         ]}
       />
