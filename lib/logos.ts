@@ -25,6 +25,7 @@ export const projectLogos: ProjectLogo[] = [
   logo("AlphaForceMD", "alphaforcemd", 583, 57, 24, 1),
   logo("GraBoqs", "graboqs", 324, 92, 32, 1),
   logo("Valyx Peptides", "valyx", 148, 29, 22, 2),
+  logo("Plain By Seye", "plainbyseye", 544, 527, 46, 2),
   logo("Lydia Esenam", "lydia-esenam", 516, 186, 34, 2),
   logo("CL Tokens", "cl-tokens", 283, 87, 31, 2),
   logo("Horizon", "horizon", 300, 70, 27, 2),

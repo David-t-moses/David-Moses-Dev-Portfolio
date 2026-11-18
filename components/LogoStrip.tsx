@@ -11,7 +11,7 @@ const rowB = projectLogos.filter((l) => l.row === 2);
 
 function Row({ logos }: { logos: ProjectLogo[] }) {
   return (
-    <ul className="m-0 flex list-none flex-wrap items-center justify-center gap-x-7 gap-y-4 p-0 md:gap-x-16 md:gap-y-5">
+    <ul className="m-0 flex list-none flex-wrap items-center justify-center gap-x-7 gap-y-4 p-0 md:gap-x-10 md:gap-y-5 lg:gap-x-12">
       {logos.map((l) => (
         <li key={l.name} className="flex shrink-0 items-center">
           <img

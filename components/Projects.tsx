@@ -63,6 +63,16 @@ const projectsData: Project[] = [
     surface: "rgba(99, 102, 241, 0.09)",
   },
   {
+    src: "/plainbyseye.jpg", width: 2400, height: 1600,
+    alt: "Plain By Seye: a menswear store for belts, suits and shoes, with the headline Redefine Style. Elevate Confidence.",
+    title: "Plain By Seye",
+    subtitle: "Online store",
+    link: "https://plainbyseye.com",
+    desc: "An online store for a menswear brand selling leather belts, suits and shoes. I built the store.",
+    tags: [],
+    surface: "rgba(99, 102, 241, 0.09)",
+  },
+  {
     src: "/pharma.png", width: 3162, height: 1612,
     alt: "Pharma Medtech dashboard showing appointments, a financial summary, patient insights and stock",
     title: "Pharma Medtech",
@@ -201,16 +211,18 @@ function MarqueeCard({ project, onOpen, dup }: { project: Project; onOpen: OnOpe
       <div className="relative flex flex-1 flex-col px-5 pb-3 pt-1 md:px-6 md:pb-4">
         <h3 className="text-lg leading-tight text-white md:text-xl">{project.title}</h3>
         <p className="mt-1.5 line-clamp-2 text-[13px] leading-snug text-slate-300 md:text-sm">{project.desc}</p>
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          tabIndex={dup ? -1 : undefined}
-          className="group/link mt-auto inline-flex min-h-[40px] items-center gap-1.5 self-start pt-1.5 text-sm font-medium text-white underline decoration-indigo-300/40 underline-offset-8 transition-colors hover:decoration-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
-        >
-          Visit website<span className="sr-only">: {project.title}</span>
-          <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-200 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
-        </a>
+        {project.link && (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            tabIndex={dup ? -1 : undefined}
+            className="group/link mt-auto inline-flex min-h-[40px] items-center gap-1.5 self-start pt-1.5 text-sm font-medium text-white underline decoration-indigo-300/40 underline-offset-8 transition-colors hover:decoration-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-300"
+          >
+            Visit website<span className="sr-only">: {project.title}</span>
+            <ArrowUpRight size={14} aria-hidden="true" className="transition-transform duration-200 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+          </a>
+        )}
       </div>
     </article>
   );
